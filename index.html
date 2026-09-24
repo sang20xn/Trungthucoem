@@ -1166,6 +1166,8 @@
     <div class="loader-moon"></div>
   </div>
 
+  <div class="tip-badge" id="tipBadge">💡 Chạm chữ có gạch chấm để đổi tên hoặc lời nhắn riêng của hai bạn</div>
+
   <div class="wish-dim" id="wishDim" aria-hidden="true"></div>
   <canvas id="sky"></canvas>
   <div class="lantern-field" id="lanternField" aria-hidden="true"></div>
@@ -1551,7 +1553,7 @@
     });
 
     /* ============ LETTER: ENVELOPE OPEN + TYPEWRITER ============ */
-const letterMessage = `Trăng đêm nay tròn thật, nhưng anh nghĩ nếu một ngày nào đó được ngồi bên cạnh em ngắm trăng, có lẽ đêm ấy sẽ còn trọn vẹn hơn nhiều.
+    const letterMessage = `Trăng đêm nay tròn thật, nhưng anh nghĩ nếu một ngày nào đó được ngồi bên cạnh em ngắm trăng, có lẽ đêm ấy sẽ còn trọn vẹn hơn nhiều.
 
 Anh vẫn nhớ lần đầu gặp em trên một phiên live, rồi từ những người xa lạ trở thành bạn bè. Chỉ sau một ngày được em quan tâm, anh đã nhận ra trong lòng mình có một cảm xúc thật đặc biệt dành cho em. Đến bây giờ, khi hai đứa đang trên con đường tìm hiểu nhau, anh càng trân trọng những điều nhỏ bé mà em mang đến.
 
@@ -1560,7 +1562,6 @@ Anh biết vì ở xa nên những lúc em bệnh, lúc em buồn, anh không th
 Trung Thu năm nay, anh chưa thể cùng em đi dưới ánh đèn lồng hay ngồi cạnh nhau thưởng thức một miếng bánh. Nhưng nếu mọi chuyện thuận lợi, anh mong một ngày không xa, anh sẽ có cơ hội được đón Trung Thu bên cạnh em, cùng ngắm trăng, cùng trò chuyện và lưu giữ những kỷ niệm thật đẹp của hai đứa.
 
 Chúc em một mùa Trung Thu thật ấm áp, thật ngọt ngào. Mong em luôn vui vẻ, bình an, và hy vọng những ngày tháng phía trước, anh vẫn có thể là người được đồng hành cùng em, dù là từ xa hay một ngày nào đó, ngay bên cạnh em. 🌙`;
-
 
     const envelope = document.getElementById('envelope');
     const letterCard = document.getElementById('letterCard');
