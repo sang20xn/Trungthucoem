@@ -1,1022 +1,1624 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trung Thu Của Chúng Mình 🌕</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --night-1:#06081c;
-    --night-2:#111640;
-    --night-3:#282c6b;
-    --horizon:#4a3a72;
-    --gold:#f3c969;
-    --gold-soft:#ffe3a3;
-    --lantern-gold:#e8935a;
-    --lantern-gold-dark:#c9622f;
-    --lantern-red:#e05a4e;
-    --lantern-red-dark:#a5332a;
-    --rose:#f3c1b0;
-    --paper:#f6ecd9;
-    --paper-dark:#efe1c4;
-    --ink:#3a2b1a;
-    --wax:#9c2b2b;
-  }
-
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-
-  body{
-    background:var(--night-1);
-    color:#f5f1ff;
-    font-family:'Be Vietnam Pro', sans-serif;
-    overflow-x:hidden;
-    width:100%;
-  }
-
-  h1,h2,h3,.serif{ font-family:'Noto Serif', serif; }
-
-  [contenteditable="true"]{
-    border-bottom:1px dashed rgba(255,255,255,.35);
-    outline:none;
-    border-radius:2px;
-    cursor:text;
-    transition:background .2s ease;
-  }
-  [contenteditable="true"]:hover{ background:rgba(255,255,255,.06); }
-  [contenteditable="true"]:focus{ background:rgba(255,255,255,.1); border-bottom-color:var(--gold); }
-  .letter [contenteditable="true"]{ border-bottom-color:rgba(58,43,26,.35); }
-  .letter [contenteditable="true"]:hover{ background:rgba(58,43,26,.06); }
-  .letter [contenteditable="true"]:focus{ background:rgba(58,43,26,.08); border-bottom-color:var(--wax); }
-
-  /* ---------- TIP BADGE ---------- */
-  .tip-badge{
-    position:fixed;
-    top:16px;
-    left:50%;
-    transform:translateX(-50%);
-    z-index:60;
-    background:rgba(10,12,36,.72);
-    border:1px solid rgba(243,201,105,.35);
-    backdrop-filter:blur(6px);
-    color:var(--gold-soft);
-    font-size:.78rem;
-    padding:.55rem 1rem;
-    border-radius:999px;
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-    cursor:pointer;
-    animation:tipFade 10s ease forwards;
-  }
-  @keyframes tipFade{
-    0%,75%{ opacity:1; }
-    100%{ opacity:0; pointer-events:none; }
-  }
-
-  /* ---------- PRELOADER ---------- */
-  #preloader{
-    position:fixed;
-    inset:0;
-    z-index:100;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--night-1);
-  }
-  #preloader .panel{
-    position:absolute;
-    top:0; bottom:0;
-    width:50%;
-    background:var(--night-1);
-    transition:transform 1s cubic-bezier(.7,0,.2,1);
-  }
-  #preloader .panel.left{ left:0; }
-  #preloader .panel.right{ right:0; }
-  #preloader.opening .panel.left{ transform:translateX(-100%); }
-  #preloader.opening .panel.right{ transform:translateX(100%); }
-  #preloader .loader-moon{
-    position:relative;
-    z-index:2;
-    width:56px; height:56px;
-    border-radius:50%;
-    background:radial-gradient(circle at 38% 32%, #fffdf5, var(--gold-soft) 55%, var(--gold));
-    box-shadow:0 0 40px 14px rgba(243,201,105,.5);
-    animation:loaderPulse 1.4s ease-in-out infinite;
-  }
-  @keyframes loaderPulse{
-    0%,100%{ transform:scale(1); opacity:1; }
-    50%{ transform:scale(1.15); opacity:.85; }
-  }
-  #preloader.hidden{ display:none; }
-
-  /* ---------- CANVAS SKY (stars, shooting stars, petals, fireflies) ---------- */
-  #sky{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:0;
-    background:linear-gradient(180deg, var(--night-1) 0%, var(--night-2) 42%, var(--night-3) 75%, var(--horizon) 100%);
-  }
-
-  /* ---------- SIDE PROGRESS DOTS ---------- */
-  .dots-nav{
-    position:fixed;
-    right:22px;
-    top:50%;
-    transform:translateY(-50%);
-    z-index:50;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-  }
-  .dots-nav button{
-    width:9px; height:9px;
-    border-radius:50%;
-    border:1px solid rgba(255,227,163,.55);
-    background:transparent;
-    padding:0;
-    cursor:pointer;
-    transition:background .3s ease, transform .3s ease;
-  }
-  .dots-nav button.active{
-    background:var(--gold-soft);
-    transform:scale(1.3);
-    box-shadow:0 0 10px 2px rgba(243,201,105,.6);
-  }
-  @media (max-width:760px){ .dots-nav{ display:none; } }
-
-  /* ---------- SOUND TOGGLE ---------- */
-  .sound-toggle{
-    position:fixed;
-    bottom:22px;
-    right:22px;
-    z-index:50;
-    width:48px;
-    height:48px;
-    border-radius:50%;
-    border:1px solid rgba(243,201,105,.4);
-    background:rgba(10,12,36,.6);
-    backdrop-filter:blur(6px);
-    color:var(--gold-soft);
-    font-size:1.15rem;
-    cursor:pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:transform .2s ease, box-shadow .2s ease;
-  }
-  .sound-toggle:hover{ transform:scale(1.08); box-shadow:0 0 18px rgba(243,201,105,.4); }
-  .sound-toggle:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:3px; }
-
-  /* ---------- LANTERN FIELD (ambient + wish) ---------- */
-  .lantern-field{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:3;
-    overflow:hidden;
-  }
-  .lantern{
-    position:absolute;
-    bottom:-140px;
-    width:32px;
-    height:44px;
-    animation:floatUp linear infinite;
-    opacity:.92;
-  }
-  .lantern.red .body{ background:linear-gradient(180deg, #ffb199, var(--lantern-red) 55%, var(--lantern-red-dark)); box-shadow:0 0 14px 4px rgba(224,90,78,.55); }
-  .lantern .body{
-    width:100%;
-    height:78%;
-    border-radius:40% 40% 46% 46%;
-    background:linear-gradient(180deg, var(--gold-soft), var(--lantern-gold) 55%, var(--lantern-gold-dark));
-    box-shadow:0 0 14px 4px rgba(232,147,90,.55);
-    position:relative;
-  }
-  .lantern .body::after{
-    content:'';
-    position:absolute;
-    inset:22% 0;
-    border-top:1px solid rgba(255,235,200,.5);
-    border-bottom:1px solid rgba(255,235,200,.5);
-  }
-  .lantern .cap, .lantern .base{ width:60%; height:6px; margin:0 auto; background:#8a5a2c; border-radius:2px; }
-  .lantern .string{ width:1px; height:12px; background:#8a5a2c; margin:0 auto; }
-
-  @keyframes floatUp{
-    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:0; }
-    8%{ opacity:.95; }
-    50%{ transform:translateY(-58vh) translateX(24px) rotate(3deg); }
-    92%{ opacity:.9; }
-    100%{ transform:translateY(-112vh) translateX(-16px) rotate(-3deg); opacity:0; }
-  }
-
-  .lantern.wish{ display:none; } /* thay bằng đèn lồng lớn bên dưới */
-
-  /* ---------- BIG WISH LANTERN ---------- */
-  .wish-dim{
-    position:fixed; inset:0; z-index:11; pointer-events:none;
-    background:radial-gradient(circle at 50% 62%, rgba(6,8,28,0) 0%, rgba(6,8,28,.6) 100%);
-    opacity:0;
-    transition:opacity 1.2s ease;
-  }
-  .wish-dim.active{ opacity:1; }
-
-  .lantern-big-outer{
-    position:fixed;
-    left:50%;
-    bottom:-280px;
-    z-index:15;
-    pointer-events:none;
-    animation: risingBig 8.5s cubic-bezier(.4,.05,.3,1) forwards;
-  }
-  @keyframes risingBig{
-    0%{ transform:translate(-50%,0) rotate(0deg); opacity:0; }
-    6%{ opacity:1; }
-    48%{ transform:translate(calc(-50% + 26px), -58vh) rotate(3deg); }
-    88%{ opacity:1; }
-    100%{ transform:translate(calc(-50% - 18px), -128vh) rotate(-3deg); opacity:0; }
-  }
-
-  .lantern-big{ width:clamp(180px, 34vw, 270px); text-align:center; }
-  .lantern-big .string-big{ width:2px; height:24px; background:#8a5a2c; margin:0 auto; }
-  .lantern-big .cap-big, .lantern-big .base-big{ width:55%; height:11px; margin:0 auto; background:#8a5a2c; border-radius:3px; }
-  .lantern-big .body-big{
-    width:100%;
-    aspect-ratio:4/5;
-    border-radius:38% 38% 42% 42%;
-    background:linear-gradient(180deg, var(--gold-soft), var(--lantern-gold) 55%, var(--lantern-gold-dark));
-    box-shadow:0 0 60px 20px rgba(243,201,105,.85), 0 0 140px 60px rgba(243,201,105,.35);
-    position:relative;
-    display:flex; align-items:center; justify-content:center;
-    padding:15%;
-  }
-  .lantern-big.red .body-big{
-    background:linear-gradient(180deg, #ffb199, var(--lantern-red) 55%, var(--lantern-red-dark));
-    box-shadow:0 0 60px 20px rgba(224,90,78,.85), 0 0 140px 60px rgba(224,90,78,.3);
-  }
-  .lantern-big .body-big::before, .lantern-big .body-big::after{
-    content:'';
-    position:absolute;
-    left:6%; right:6%;
-    border-top:1px solid rgba(255,235,200,.5);
-  }
-  .lantern-big .body-big::before{ top:20%; }
-  .lantern-big .body-big::after{ bottom:20%; }
-  .lantern-big .wish-text{
-    color:#4a2f14;
-    font-family:'Noto Serif', serif;
-    font-style:italic;
-    font-weight:600;
-    font-size:clamp(.82rem, 2.3vw, 1.05rem);
-    line-height:1.42;
-    word-break:break-word;
-    text-shadow:0 1px 0 rgba(255,255,255,.25);
-  }
-
-  /* ---------- SHARED SECTION STYLES ---------- */
-  section{ position:relative; z-index:2; padding:11vh 6vw; }
-  .section-title{ text-align:center; font-size:clamp(1.5rem, 4vw, 2.3rem); color:var(--gold-soft); margin-bottom:.6rem; }
-  .section-kicker{ text-align:center; font-size:.8rem; letter-spacing:.06em; color:var(--rose); margin-bottom:1.7rem; opacity:.85; }
-  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s ease, transform .9s ease; }
-  .reveal.in-view{ opacity:1; transform:translateY(0); }
-
-  /* ===================== HERO ===================== */
-  .hero{
-    min-height:100svh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-end;
-    text-align:center;
-    padding:6vh 6vw 0;
-    overflow:hidden;
-  }
-
-  .parallax-layer{ position:absolute; inset:0; z-index:1; pointer-events:none; will-change:transform; }
-
-  .clouds{ opacity:.5; }
-  .clouds svg{ position:absolute; width:140%; left:-20%; animation:driftClouds 70s linear infinite; }
-  .clouds svg.c2{ top:14%; opacity:.6; animation-duration:95s; animation-direction:reverse; }
-  @keyframes driftClouds{ from{ transform:translateX(0); } to{ transform:translateX(6%); } }
-
-  .mountains{ bottom:0; }
-  .mountains svg{ position:absolute; bottom:0; width:100%; }
-
-  .moon-wrap{
-    position:absolute;
-    top:8vh;
-    left:50%;
-    width:min(32vw, 200px);
-    height:min(32vw, 200px);
-    z-index:1;
-  }
-  .moon{
-    width:100%; height:100%;
-    border-radius:50%;
-    background:radial-gradient(circle at 38% 32%, #fffdf5 0%, var(--gold-soft) 42%, var(--gold) 78%, #e0ac52 100%);
-    box-shadow:0 0 60px 18px rgba(243,201,105,.55), 0 0 140px 60px rgba(243,201,105,.22);
-    animation:moonRise 2.2s cubic-bezier(.2,.8,.2,1) both, moonGlow 5s ease-in-out infinite 2.2s;
-    position:relative;
-  }
-  .moon::before, .moon::after{ content:''; position:absolute; border-radius:50%; background:rgba(200,150,70,.28); }
-  .moon::before{ width:22%; height:22%; top:20%; left:22%; }
-  .moon::after{ width:14%; height:14%; top:55%; left:60%; }
-  @keyframes moonRise{ from{ opacity:0; transform:translateY(40px) scale(.85); } to{ opacity:1; transform:translateY(0) scale(1); } }
-  @keyframes moonGlow{
-    0%,100%{ box-shadow:0 0 60px 18px rgba(243,201,105,.5), 0 0 140px 60px rgba(243,201,105,.2); }
-    50%{ box-shadow:0 0 78px 26px rgba(243,201,105,.72), 0 0 170px 80px rgba(243,201,105,.3); }
-  }
-  .rabbit{ position:absolute; width:22%; height:22%; top:30%; left:33%; opacity:.35; }
-
-  .tree-scene{
-    position:absolute;
-    bottom:0; left:0;
-    width:100%;
-    z-index:2;
-    line-height:0;
-  }
-
-  .hero-content{
-    position:relative;
-    z-index:3;
-    margin-top:22vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:.9rem;
-  }
-  .eyebrow{ font-size:.85rem; letter-spacing:.06em; color:var(--rose); opacity:0; animation:riseIn .9s ease forwards .3s; }
-  .hero h1{ font-size:clamp(1.9rem, 6vw, 3.5rem); font-weight:700; line-height:1.28; max-width:15ch; opacity:0; animation:riseIn 1s ease forwards .55s; }
-  .hero h1 em{ font-style:italic; color:var(--gold-soft); }
-  .hero p.sub{ max-width:38ch; color:#d9d3ef; font-size:1.02rem; line-height:1.7; opacity:0; animation:riseIn 1s ease forwards .85s; }
-  @keyframes riseIn{ from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
-
-  .scroll-hint{ margin:3rem 0 2.2rem; font-size:.8rem; color:var(--rose); display:flex; flex-direction:column; align-items:center; gap:.4rem; opacity:0; animation:riseIn 1s ease forwards 1.2s; z-index:3; position:relative; }
-  .scroll-hint .arrow{ width:1px; height:34px; background:linear-gradient(var(--rose), transparent); animation:pulseArrow 1.8s ease-in-out infinite; }
-  @keyframes pulseArrow{ 0%,100%{ opacity:.3; } 50%{ opacity:1; } }
-
-  /* ===================== GALLERY ===================== */
-  .gallery-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
-    gap:2rem;
-    max-width:920px;
-    margin:0 auto;
-  }
-  .polaroid{
-    background:var(--paper);
-    padding:.9rem .9rem 1.2rem;
-    border-radius:4px;
-    box-shadow:0 18px 34px -14px rgba(0,0,0,.55);
-    transform:rotate(var(--rot,-2deg));
-    transition:transform .3s ease, box-shadow .3s ease;
-  }
-  .polaroid:nth-child(2){ --rot:1.5deg; }
-  .polaroid:nth-child(3){ --rot:-1deg; }
-  .polaroid:nth-child(4){ --rot:2deg; }
-  .polaroid:hover{ transform:rotate(0deg) translateY(-6px); box-shadow:0 26px 44px -14px rgba(0,0,0,.6); }
-  .photo-slot{
-    width:100%;
-    aspect-ratio:1/1;
-    border-radius:2px;
-    background:#d8cba6 center/cover no-repeat;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    color:#8a7853;
-    font-size:.78rem;
-    text-align:center;
-    padding:.6rem;
-    border:1px dashed #b79a5c;
-  }
-  .photo-slot.has-photo{ border:none; color:transparent; }
-  .polaroid .caption{
-    margin-top:.7rem;
-    font-family:'Noto Serif', serif;
-    font-style:italic;
-    font-size:.92rem;
-    color:var(--ink);
-    text-align:center;
-  }
-
-  /* ===================== LETTER ===================== */
-  .letter-wrap{ max-width:640px; margin:0 auto; position:relative; min-height:340px; }
-
-  .envelope{
-    background:linear-gradient(160deg, var(--paper), var(--paper-dark));
-    border-radius:8px;
-    padding:3.2rem 2rem;
-    text-align:center;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
-    cursor:pointer;
-    transition:opacity .5s ease, transform .5s ease;
-  }
-  .envelope.gone{ opacity:0; transform:scale(.9); pointer-events:none; position:absolute; inset:0; }
-  .envelope .seal{
-    width:64px; height:64px;
-    margin:0 auto 1.2rem;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #d15b5b, var(--wax) 70%);
-    display:flex; align-items:center; justify-content:center;
-    font-size:1.6rem;
-    box-shadow:0 6px 14px rgba(0,0,0,.4), inset 0 -4px 6px rgba(0,0,0,.25);
-    transition:transform .4s ease;
-  }
-  .envelope:hover .seal{ transform:scale(1.06) rotate(-4deg); }
-  .envelope p{ color:#6b4b28; font-size:.95rem; }
-  .envelope .tap-label{ margin-top:.4rem; font-size:.82rem; color:#a5332a; font-weight:600; }
-
-  .letter{
-    background:linear-gradient(180deg, var(--paper), var(--paper-dark));
-    color:var(--ink);
-    border-radius:6px;
-    padding:2.6rem 2.2rem;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.55), 0 0 0 1px rgba(184,143,74,.35);
-    position:absolute;
-    inset:0;
-    opacity:0;
-    transform:translateY(20px) scale(.97);
-    transition:opacity .7s ease, transform .7s ease;
-    pointer-events:none;
-  }
-  .letter.visible{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; position:relative; }
-  .letter h3{ font-size:1.3rem; margin-bottom:1.1rem; color:#5a3d1f; }
-  .letter-body{ font-size:1.02rem; line-height:1.85; white-space:pre-wrap; min-height:8em; }
-  .letter-body .cursor{ display:inline-block; width:2px; height:1.05em; background:#5a3d1f; vertical-align:text-bottom; animation:blink 1s step-start infinite; }
-  @keyframes blink{ 50%{ opacity:0; } }
-  .signature{ margin-top:1.6rem; text-align:right; font-style:italic; color:#5a3d1f; opacity:.85; }
-
-  /* ===================== MOONCAKES ===================== */
-  .cake-grid{
-    display:flex;
-    justify-content:center;
-    gap:2.6rem;
-    flex-wrap:wrap;
-    max-width:600px;
-    margin:0 auto;
-  }
-  .mooncake-item{ text-align:center; position:relative; }
-  .mooncake{
-    width:88px; height:88px;
-    position:relative;
-    cursor:pointer;
-    transition:transform .3s ease;
-    perspective:400px;
-  }
-  .mooncake:hover{ transform:translateY(-5px); }
-  .mooncake .half{
-    position:absolute;
-    inset:0;
-    border-radius:10px;
-    background:linear-gradient(160deg, #d99a4e, #a86a2c);
-    box-shadow:inset 0 0 0 2px rgba(255,225,170,.3), 0 10px 20px -8px rgba(0,0,0,.6);
-    display:flex; align-items:center; justify-content:center;
-    overflow:hidden;
-    transition:transform .55s cubic-bezier(.3,.9,.3,1), box-shadow .55s ease;
-  }
-  .mooncake .half span{ font-size:1.6rem; }
-  .mooncake .half-left{ clip-path:inset(0 50% 0 0); }
-  .mooncake .half-right{ clip-path:inset(0 0 0 50%); }
-  .mooncake .half::after{
-    content:'';
-    position:absolute;
-    top:0; bottom:0;
-    width:2px;
-    background:rgba(58,36,16,.5);
-  }
-  .mooncake .half-left::after{ right:0; }
-  .mooncake .half-right::after{ left:0; }
-
-  .mooncake-item.cut .half-left{ transform:translate3d(-14px,2px,0) rotateY(-18deg); box-shadow:6px 10px 20px -8px rgba(0,0,0,.7); }
-  .mooncake-item.cut .half-right{ transform:translate3d(14px,2px,0) rotateY(18deg); box-shadow:-6px 10px 20px -8px rgba(0,0,0,.7); }
-
-  .mooncake-core{
-    position:absolute;
-    top:50%; left:50%;
-    width:26px; height:26px;
-    margin:-13px 0 0 -13px;
-    border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #ffd98a, #e8935a 75%);
-    display:flex; align-items:center; justify-content:center;
-    font-size:.85rem;
-    box-shadow:0 0 12px 4px rgba(232,147,90,.55);
-    transform:scale(0);
-    transition:transform .45s cubic-bezier(.3,1.4,.4,1) .18s;
-  }
-  .mooncake-item.cut .mooncake-core{ transform:scale(1); }
-  .mooncake-msg{
-    position:absolute;
-    bottom:104%;
-    left:50%;
-    transform:translateX(-50%) translateY(6px);
-    background:var(--paper);
-    color:var(--ink);
-    font-size:.76rem;
-    line-height:1.4;
-    padding:.55rem .7rem;
-    border-radius:8px;
-    width:160px;
-    box-shadow:0 10px 22px -8px rgba(0,0,0,.5);
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .3s ease, transform .3s ease;
-  }
-  .mooncake-item.cut .mooncake-msg{ opacity:1; transform:translateX(-50%) translateY(0); }
-  .mooncake-label{ margin-top:.6rem; font-size:.8rem; color:#c9c3e6; }
-
-  /* burst particle */
-  .burst-particle{
-    position:fixed;
-    z-index:40;
-    pointer-events:none;
-    font-size:1rem;
-    transition:transform .8s cubic-bezier(.2,.7,.3,1), opacity .8s ease;
-  }
-
-  /* ===================== WISH ===================== */
-  .wish-section{ text-align:center; padding-bottom:16vh; }
-  .wish-input{ max-width:420px; margin:0 auto 1.6rem; display:flex; flex-direction:column; gap:.7rem; }
-  .wish-input input{
-    width:100%; padding:.85rem 1.1rem; border-radius:999px;
-    border:1px solid rgba(243,201,105,.4);
-    background:rgba(255,255,255,.06); color:#f5f1ff; font-family:inherit; font-size:.95rem;
-    outline:none; transition:border-color .25s ease, background .25s ease;
-  }
-  .wish-input input::placeholder{ color:#c9c3e6; }
-  .wish-input input:focus{ border-color:var(--gold); background:rgba(255,255,255,.1); }
-
-  .btn-lantern{
-    align-self:center; padding:.9rem 2.1rem; border-radius:999px; border:none;
-    background:linear-gradient(135deg, var(--gold-soft), var(--lantern-gold));
-    color:#3a2410; font-weight:600; font-size:.95rem; letter-spacing:.02em; cursor:pointer;
-    box-shadow:0 12px 26px -10px rgba(232,147,90,.6);
-    transition:transform .2s ease, box-shadow .2s ease;
-  }
-  .btn-lantern:hover{ transform:translateY(-2px); box-shadow:0 16px 30px -8px rgba(232,147,90,.75); }
-  .btn-lantern:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:3px; }
-  .btn-lantern:active{ transform:translateY(0); }
-  .wish-hint{ font-size:.85rem; color:#c9c3e6; margin-top:.5rem; min-height:1.4em; }
-  .wish-count{ font-size:.76rem; color:var(--rose); opacity:.8; margin-top:.2rem; }
-
-  footer{ position:relative; z-index:2; text-align:center; padding:3rem 6vw 3.4rem; color:#a79fce; font-size:.85rem; }
-  footer .heart{ color:var(--rose); }
-
-  @media (max-width:520px){
-    .letter{ padding:2rem 1.3rem; }
-    .cake-grid{ gap:1.6rem; }
-    .gallery-grid{ gap:1.4rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *, *::before, *::after{
-      animation-duration:.001ms !important;
-      animation-iteration-count:1 !important;
-      transition-duration:.001ms !important;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trung Thu Của Chúng Mình 🌕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --night-1: #06081c;
+      --night-2: #111640;
+      --night-3: #282c6b;
+      --horizon: #4a3a72;
+      --gold: #f3c969;
+      --gold-soft: #ffe3a3;
+      --lantern-gold: #e8935a;
+      --lantern-gold-dark: #c9622f;
+      --lantern-red: #e05a4e;
+      --lantern-red-dark: #a5332a;
+      --rose: #f3c1b0;
+      --paper: #f6ecd9;
+      --paper-dark: #efe1c4;
+      --ink: #3a2b1a;
+      --wax: #9c2b2b;
     }
-  }
-</style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--night-1);
+      color: #f5f1ff;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    h1,
+    h2,
+    h3,
+    .serif {
+      font-family: 'Noto Serif', serif;
+    }
+
+    [contenteditable="true"] {
+      border-bottom: 1px dashed rgba(255, 255, 255, .35);
+      outline: none;
+      border-radius: 2px;
+      cursor: text;
+      transition: background .2s ease;
+    }
+
+    [contenteditable="true"]:hover {
+      background: rgba(255, 255, 255, .06);
+    }
+
+    [contenteditable="true"]:focus {
+      background: rgba(255, 255, 255, .1);
+      border-bottom-color: var(--gold);
+    }
+
+    .letter [contenteditable="true"] {
+      border-bottom-color: rgba(58, 43, 26, .35);
+    }
+
+    .letter [contenteditable="true"]:hover {
+      background: rgba(58, 43, 26, .06);
+    }
+
+    .letter [contenteditable="true"]:focus {
+      background: rgba(58, 43, 26, .08);
+      border-bottom-color: var(--wax);
+    }
+
+    /* ---------- TIP BADGE ---------- */
+    .tip-badge {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      background: rgba(10, 12, 36, .72);
+      border: 1px solid rgba(243, 201, 105, .35);
+      backdrop-filter: blur(6px);
+      color: var(--gold-soft);
+      font-size: .78rem;
+      padding: .55rem 1rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      animation: tipFade 10s ease forwards;
+    }
+
+    @keyframes tipFade {
+
+      0%,
+      75% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    /* ---------- PRELOADER ---------- */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--night-1);
+    }
+
+    #preloader .panel {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: var(--night-1);
+      transition: transform 1s cubic-bezier(.7, 0, .2, 1);
+    }
+
+    #preloader .panel.left {
+      left: 0;
+    }
+
+    #preloader .panel.right {
+      right: 0;
+    }
+
+    #preloader.opening .panel.left {
+      transform: translateX(-100%);
+    }
+
+    #preloader.opening .panel.right {
+      transform: translateX(100%);
+    }
+
+    #preloader .loader-moon {
+      position: relative;
+      z-index: 2;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #fffdf5, var(--gold-soft) 55%, var(--gold));
+      box-shadow: 0 0 40px 14px rgba(243, 201, 105, .5);
+      animation: loaderPulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes loaderPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: .85;
+      }
+    }
+
+    #preloader.hidden {
+      display: none;
+    }
+
+    /* ---------- CANVAS SKY (stars, shooting stars, petals, fireflies) ---------- */
+    #sky {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: linear-gradient(180deg, var(--night-1) 0%, var(--night-2) 42%, var(--night-3) 75%, var(--horizon) 100%);
+    }
+
+    /* ---------- SIDE PROGRESS DOTS ---------- */
+    .dots-nav {
+      position: fixed;
+      right: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .dots-nav button {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 227, 163, .55);
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      transition: background .3s ease, transform .3s ease;
+    }
+
+    .dots-nav button.active {
+      background: var(--gold-soft);
+      transform: scale(1.3);
+      box-shadow: 0 0 10px 2px rgba(243, 201, 105, .6);
+    }
+
+    @media (max-width:760px) {
+      .dots-nav {
+        display: none;
+      }
+    }
+
+    /* ---------- SOUND TOGGLE ---------- */
+    .sound-toggle {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 50;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid rgba(243, 201, 105, .4);
+      background: rgba(10, 12, 36, .6);
+      backdrop-filter: blur(6px);
+      color: var(--gold-soft);
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .sound-toggle:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 18px rgba(243, 201, 105, .4);
+    }
+
+    .sound-toggle:focus-visible {
+      outline: 2px solid var(--gold-soft);
+      outline-offset: 3px;
+    }
+
+    /* ---------- LANTERN FIELD (ambient + wish) ---------- */
+    .lantern-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .lantern {
+      position: absolute;
+      bottom: -140px;
+      width: 32px;
+      height: 44px;
+      animation: floatUp linear infinite;
+      opacity: .92;
+    }
+
+    .lantern.red .body {
+      background: linear-gradient(180deg, #ffb199, var(--lantern-red) 55%, var(--lantern-red-dark));
+      box-shadow: 0 0 14px 4px rgba(224, 90, 78, .55);
+    }
+
+    .lantern .body {
+      width: 100%;
+      height: 78%;
+      border-radius: 40% 40% 46% 46%;
+      background: linear-gradient(180deg, var(--gold-soft), var(--lantern-gold) 55%, var(--lantern-gold-dark));
+      box-shadow: 0 0 14px 4px rgba(232, 147, 90, .55);
+      position: relative;
+    }
+
+    .lantern .body::after {
+      content: '';
+      position: absolute;
+      inset: 22% 0;
+      border-top: 1px solid rgba(255, 235, 200, .5);
+      border-bottom: 1px solid rgba(255, 235, 200, .5);
+    }
+
+    .lantern .cap,
+    .lantern .base {
+      width: 60%;
+      height: 6px;
+      margin: 0 auto;
+      background: #8a5a2c;
+      border-radius: 2px;
+    }
+
+    .lantern .string {
+      width: 1px;
+      height: 12px;
+      background: #8a5a2c;
+      margin: 0 auto;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      8% {
+        opacity: .95;
+      }
+
+      50% {
+        transform: translateY(-58vh) translateX(24px) rotate(3deg);
+      }
+
+      92% {
+        opacity: .9;
+      }
+
+      100% {
+        transform: translateY(-112vh) translateX(-16px) rotate(-3deg);
+        opacity: 0;
+      }
+    }
+
+    .lantern.wish {
+      display: none;
+    }
+
+    /* thay bằng đèn lồng lớn bên dưới */
+
+    /* ---------- BIG WISH LANTERN ---------- */
+    .wish-dim {
+      position: fixed;
+      inset: 0;
+      z-index: 11;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 62%, rgba(6, 8, 28, 0) 0%, rgba(6, 8, 28, .6) 100%);
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .wish-dim.active {
+      opacity: 1;
+    }
+
+    .lantern-big-outer {
+      position: fixed;
+      left: 50%;
+      bottom: -280px;
+      z-index: 15;
+      pointer-events: none;
+      animation: risingBig 8.5s cubic-bezier(.4, .05, .3, 1) forwards;
+    }
+
+    @keyframes risingBig {
+      0% {
+        transform: translate(-50%, 0) rotate(0deg);
+        opacity: 0;
+      }
+
+      6% {
+        opacity: 1;
+      }
+
+      48% {
+        transform: translate(calc(-50% + 26px), -58vh) rotate(3deg);
+      }
+
+      88% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(calc(-50% - 18px), -128vh) rotate(-3deg);
+        opacity: 0;
+      }
+    }
+
+    .lantern-big {
+      width: clamp(180px, 34vw, 270px);
+      text-align: center;
+    }
+
+    .lantern-big .string-big {
+      width: 2px;
+      height: 24px;
+      background: #8a5a2c;
+      margin: 0 auto;
+    }
+
+    .lantern-big .cap-big,
+    .lantern-big .base-big {
+      width: 55%;
+      height: 11px;
+      margin: 0 auto;
+      background: #8a5a2c;
+      border-radius: 3px;
+    }
+
+    .lantern-big .body-big {
+      width: 100%;
+      aspect-ratio: 4/5;
+      border-radius: 38% 38% 42% 42%;
+      background: linear-gradient(180deg, var(--gold-soft), var(--lantern-gold) 55%, var(--lantern-gold-dark));
+      box-shadow: 0 0 60px 20px rgba(243, 201, 105, .85), 0 0 140px 60px rgba(243, 201, 105, .35);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15%;
+    }
+
+    .lantern-big.red .body-big {
+      background: linear-gradient(180deg, #ffb199, var(--lantern-red) 55%, var(--lantern-red-dark));
+      box-shadow: 0 0 60px 20px rgba(224, 90, 78, .85), 0 0 140px 60px rgba(224, 90, 78, .3);
+    }
+
+    .lantern-big .body-big::before,
+    .lantern-big .body-big::after {
+      content: '';
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      border-top: 1px solid rgba(255, 235, 200, .5);
+    }
+
+    .lantern-big .body-big::before {
+      top: 20%;
+    }
+
+    .lantern-big .body-big::after {
+      bottom: 20%;
+    }
+
+    .lantern-big .wish-text {
+      color: #4a2f14;
+      font-family: 'Noto Serif', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: clamp(.82rem, 2.3vw, 1.05rem);
+      line-height: 1.42;
+      word-break: break-word;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .25);
+    }
+
+    /* ---------- SHARED SECTION STYLES ---------- */
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 11vh 6vw;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.5rem, 4vw, 2.3rem);
+      color: var(--gold-soft);
+      margin-bottom: .6rem;
+    }
+
+    .section-kicker {
+      text-align: center;
+      font-size: .8rem;
+      letter-spacing: .06em;
+      color: var(--rose);
+      margin-bottom: 1.7rem;
+      opacity: .85;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .9s ease, transform .9s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===================== HERO ===================== */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: center;
+      padding: 6vh 6vw 0;
+      overflow: hidden;
+    }
+
+    .parallax-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .clouds {
+      opacity: .5;
+    }
+
+    .clouds svg {
+      position: absolute;
+      width: 140%;
+      left: -20%;
+      animation: driftClouds 70s linear infinite;
+    }
+
+    .clouds svg.c2 {
+      top: 14%;
+      opacity: .6;
+      animation-duration: 95s;
+      animation-direction: reverse;
+    }
+
+    @keyframes driftClouds {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(6%);
+      }
+    }
+
+    .mountains {
+      bottom: 0;
+    }
+
+    .mountains svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .moon-wrap {
+      position: absolute;
+      top: 8vh;
+      left: 50%;
+      width: min(32vw, 200px);
+      height: min(32vw, 200px);
+      z-index: 1;
+    }
+
+    .moon {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 32%, #fffdf5 0%, var(--gold-soft) 42%, var(--gold) 78%, #e0ac52 100%);
+      box-shadow: 0 0 60px 18px rgba(243, 201, 105, .55), 0 0 140px 60px rgba(243, 201, 105, .22);
+      animation: moonRise 2.2s cubic-bezier(.2, .8, .2, 1) both, moonGlow 5s ease-in-out infinite 2.2s;
+      position: relative;
+    }
+
+    .moon::before,
+    .moon::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(200, 150, 70, .28);
+    }
+
+    .moon::before {
+      width: 22%;
+      height: 22%;
+      top: 20%;
+      left: 22%;
+    }
+
+    .moon::after {
+      width: 14%;
+      height: 14%;
+      top: 55%;
+      left: 60%;
+    }
+
+    @keyframes moonRise {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(.85);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes moonGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 60px 18px rgba(243, 201, 105, .5), 0 0 140px 60px rgba(243, 201, 105, .2);
+      }
+
+      50% {
+        box-shadow: 0 0 78px 26px rgba(243, 201, 105, .72), 0 0 170px 80px rgba(243, 201, 105, .3);
+      }
+    }
+
+    .rabbit {
+      position: absolute;
+      width: 22%;
+      height: 22%;
+      top: 30%;
+      left: 33%;
+      opacity: .35;
+    }
+
+    .tree-scene {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+      line-height: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      margin-top: 22vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .9rem;
+    }
+
+    .eyebrow {
+      font-size: .85rem;
+      letter-spacing: .06em;
+      color: var(--rose);
+      opacity: 0;
+      animation: riseIn .9s ease forwards .3s;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 6vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.28;
+      max-width: 15ch;
+      opacity: 0;
+      animation: riseIn 1s ease forwards .55s;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold-soft);
+    }
+
+    .hero p.sub {
+      max-width: 38ch;
+      color: #d9d3ef;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      opacity: 0;
+      animation: riseIn 1s ease forwards .85s;
+    }
+
+    @keyframes riseIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-hint {
+      margin: 3rem 0 2.2rem;
+      font-size: .8rem;
+      color: var(--rose);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      opacity: 0;
+      animation: riseIn 1s ease forwards 1.2s;
+      z-index: 3;
+      position: relative;
+    }
+
+    .scroll-hint .arrow {
+      width: 1px;
+      height: 34px;
+      background: linear-gradient(var(--rose), transparent);
+      animation: pulseArrow 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseArrow {
+
+      0%,
+      100% {
+        opacity: .3;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    /* ===================== GALLERY ===================== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 2rem;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .polaroid {
+      background: var(--paper);
+      padding: .9rem .9rem 1.2rem;
+      border-radius: 4px;
+      box-shadow: 0 18px 34px -14px rgba(0, 0, 0, .55);
+      transform: rotate(var(--rot, -2deg));
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+
+    .polaroid:nth-child(2) {
+      --rot: 1.5deg;
+    }
+
+    .polaroid:nth-child(3) {
+      --rot: -1deg;
+    }
+
+    .polaroid:nth-child(4) {
+      --rot: 2deg;
+    }
+
+    .polaroid:hover {
+      transform: rotate(0deg) translateY(-6px);
+      box-shadow: 0 26px 44px -14px rgba(0, 0, 0, .6);
+    }
+
+    .photo-slot {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 2px;
+      background: #d8cba6 center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #8a7853;
+      font-size: .78rem;
+      text-align: center;
+      padding: .6rem;
+      border: 1px dashed #b79a5c;
+    }
+
+    .photo-slot.has-photo {
+      border: none;
+      color: transparent;
+    }
+
+    .polaroid .caption {
+      margin-top: .7rem;
+      font-family: 'Noto Serif', serif;
+      font-style: italic;
+      font-size: .92rem;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    /* ===================== LETTER ===================== */
+    .letter-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      min-height: 340px;
+    }
+
+    .envelope {
+      background: linear-gradient(160deg, var(--paper), var(--paper-dark));
+      border-radius: 8px;
+      padding: 3.2rem 2rem;
+      text-align: center;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55);
+      cursor: pointer;
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .envelope.gone {
+      opacity: 0;
+      transform: scale(.9);
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+    }
+
+    .envelope .seal {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.2rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #d15b5b, var(--wax) 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, .4), inset 0 -4px 6px rgba(0, 0, 0, .25);
+      transition: transform .4s ease;
+    }
+
+    .envelope:hover .seal {
+      transform: scale(1.06) rotate(-4deg);
+    }
+
+    .envelope p {
+      color: #6b4b28;
+      font-size: .95rem;
+    }
+
+    .envelope .tap-label {
+      margin-top: .4rem;
+      font-size: .82rem;
+      color: #a5332a;
+      font-weight: 600;
+    }
+
+    .letter {
+      background: linear-gradient(180deg, var(--paper), var(--paper-dark));
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 2.6rem 2.2rem;
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55), 0 0 0 1px rgba(184, 143, 74, .35);
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(20px) scale(.97);
+      transition: opacity .7s ease, transform .7s ease;
+      pointer-events: none;
+    }
+
+    .letter.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .letter h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1.1rem;
+      color: #5a3d1f;
+    }
+
+    .letter-body {
+      font-size: 1.02rem;
+      line-height: 1.85;
+      white-space: pre-wrap;
+      min-height: 8em;
+    }
+
+    .letter-body .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.05em;
+      background: #5a3d1f;
+      vertical-align: text-bottom;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .signature {
+      margin-top: 1.6rem;
+      text-align: right;
+      font-style: italic;
+      color: #5a3d1f;
+      opacity: .85;
+    }
+
+    /* ===================== MOONCAKES ===================== */
+    .cake-grid {
+      display: flex;
+      justify-content: center;
+      gap: 2.6rem;
+      flex-wrap: wrap;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .mooncake-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .mooncake {
+      width: 88px;
+      height: 88px;
+      position: relative;
+      cursor: pointer;
+      transition: transform .3s ease;
+      perspective: 400px;
+    }
+
+    .mooncake:hover {
+      transform: translateY(-5px);
+    }
+
+    .mooncake .half {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background: linear-gradient(160deg, #d99a4e, #a86a2c);
+      box-shadow: inset 0 0 0 2px rgba(255, 225, 170, .3), 0 10px 20px -8px rgba(0, 0, 0, .6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform .55s cubic-bezier(.3, .9, .3, 1), box-shadow .55s ease;
+    }
+
+    .mooncake .half span {
+      font-size: 1.6rem;
+    }
+
+    .mooncake .half-left {
+      clip-path: inset(0 50% 0 0);
+    }
+
+    .mooncake .half-right {
+      clip-path: inset(0 0 0 50%);
+    }
+
+    .mooncake .half::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(58, 36, 16, .5);
+    }
+
+    .mooncake .half-left::after {
+      right: 0;
+    }
+
+    .mooncake .half-right::after {
+      left: 0;
+    }
+
+    .mooncake-item.cut .half-left {
+      transform: translate3d(-14px, 2px, 0) rotateY(-18deg);
+      box-shadow: 6px 10px 20px -8px rgba(0, 0, 0, .7);
+    }
+
+    .mooncake-item.cut .half-right {
+      transform: translate3d(14px, 2px, 0) rotateY(18deg);
+      box-shadow: -6px 10px 20px -8px rgba(0, 0, 0, .7);
+    }
+
+    .mooncake-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 26px;
+      height: 26px;
+      margin: -13px 0 0 -13px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd98a, #e8935a 75%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      box-shadow: 0 0 12px 4px rgba(232, 147, 90, .55);
+      transform: scale(0);
+      transition: transform .45s cubic-bezier(.3, 1.4, .4, 1) .18s;
+    }
+
+    .mooncake-item.cut .mooncake-core {
+      transform: scale(1);
+    }
+
+    .mooncake-msg {
+      position: absolute;
+      bottom: 104%;
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: var(--paper);
+      color: var(--ink);
+      font-size: .76rem;
+      line-height: 1.4;
+      padding: .55rem .7rem;
+      border-radius: 8px;
+      width: 160px;
+      box-shadow: 0 10px 22px -8px rgba(0, 0, 0, .5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .mooncake-item.cut .mooncake-msg {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .mooncake-label {
+      margin-top: .6rem;
+      font-size: .8rem;
+      color: #c9c3e6;
+    }
+
+    /* burst particle */
+    .burst-particle {
+      position: fixed;
+      z-index: 40;
+      pointer-events: none;
+      font-size: 1rem;
+      transition: transform .8s cubic-bezier(.2, .7, .3, 1), opacity .8s ease;
+    }
+
+    /* ===================== WISH ===================== */
+    .wish-section {
+      text-align: center;
+      padding-bottom: 16vh;
+    }
+
+    .wish-input {
+      max-width: 420px;
+      margin: 0 auto 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+
+    .wish-input input {
+      width: 100%;
+      padding: .85rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(243, 201, 105, .4);
+      background: rgba(255, 255, 255, .06);
+      color: #f5f1ff;
+      font-family: inherit;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .25s ease, background .25s ease;
+    }
+
+    .wish-input input::placeholder {
+      color: #c9c3e6;
+    }
+
+    .wish-input input:focus {
+      border-color: var(--gold);
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .btn-lantern {
+      align-self: center;
+      padding: .9rem 2.1rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--gold-soft), var(--lantern-gold));
+      color: #3a2410;
+      font-weight: 600;
+      font-size: .95rem;
+      letter-spacing: .02em;
+      cursor: pointer;
+      box-shadow: 0 12px 26px -10px rgba(232, 147, 90, .6);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .btn-lantern:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px -8px rgba(232, 147, 90, .75);
+    }
+
+    .btn-lantern:focus-visible {
+      outline: 2px solid var(--gold-soft);
+      outline-offset: 3px;
+    }
+
+    .btn-lantern:active {
+      transform: translateY(0);
+    }
+
+    .wish-hint {
+      font-size: .85rem;
+      color: #c9c3e6;
+      margin-top: .5rem;
+      min-height: 1.4em;
+    }
+
+    .wish-count {
+      font-size: .76rem;
+      color: var(--rose);
+      opacity: .8;
+      margin-top: .2rem;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 3rem 6vw 3.4rem;
+      color: #a79fce;
+      font-size: .85rem;
+    }
+
+    footer .heart {
+      color: var(--rose);
+    }
+
+    @media (max-width:520px) {
+      .letter {
+        padding: 2rem 1.3rem;
+      }
+
+      .cake-grid {
+        gap: 1.6rem;
+      }
+
+      .gallery-grid {
+        gap: 1.4rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="preloader"><div class="panel left"></div><div class="panel right"></div><div class="loader-moon"></div></div>
-
-<div class="wish-dim" id="wishDim" aria-hidden="true"></div>
-<canvas id="sky"></canvas>
-<div class="lantern-field" id="lanternField" aria-hidden="true"></div>
-
-<nav class="dots-nav" id="dotsNav" aria-label="Điều hướng trang">
-  <button data-target="sec-hero" aria-label="Trang đầu"></button>
-  <button data-target="sec-gallery" aria-label="Kỷ niệm"></button>
-  <button data-target="sec-letter" aria-label="Lá thư"></button>
-  <button data-target="sec-cake" aria-label="Bánh trung thu"></button>
-  <button data-target="sec-wish" aria-label="Đèn ước"></button>
-</nav>
-
-<button class="sound-toggle" id="soundToggle" aria-label="Bật nhạc nền">🔇</button>
-
-<!-- ===================== HERO ===================== -->
-<section class="hero" id="sec-hero">
-  <div class="parallax-layer clouds" data-depth="12">
-    <svg class="c1" viewBox="0 0 400 80" width="400" height="80"><ellipse cx="80" cy="40" rx="70" ry="20" fill="#cfd0f2" opacity=".5"/><ellipse cx="150" cy="30" rx="50" ry="16" fill="#cfd0f2" opacity=".4"/></svg>
-    <svg class="c2" viewBox="0 0 400 80" width="400" height="80"><ellipse cx="260" cy="45" rx="90" ry="18" fill="#cfd0f2" opacity=".35"/></svg>
+  <div id="preloader">
+    <div class="panel left"></div>
+    <div class="panel right"></div>
+    <div class="loader-moon"></div>
   </div>
 
-  <div class="moon-wrap" data-depth="26">
-    <div class="moon">
-      <svg class="rabbit" viewBox="0 0 100 100" aria-hidden="true">
-        <path fill="#b98a4a" d="M46 30c-2-6-1-12 3-14 3 6 3 11 1 15 3-1 6 0 8 3 3-6 8-9 12-7-1 6-6 10-11 11 4 2 6 6 5 11-6 1-11-2-13-7-1 5-5 8-10 8-6 0-11-5-11-11 0-5 3-9 8-11-3-2-4-6-2-9 3 1 6 3 10 6z"/>
+  <div class="tip-badge" id="tipBadge">💡 Chạm chữ có gạch chấm để đổi tên hoặc lời nhắn riêng của hai bạn</div>
+
+  <div class="wish-dim" id="wishDim" aria-hidden="true"></div>
+  <canvas id="sky"></canvas>
+  <div class="lantern-field" id="lanternField" aria-hidden="true"></div>
+
+  <nav class="dots-nav" id="dotsNav" aria-label="Điều hướng trang">
+    <button data-target="sec-hero" aria-label="Trang đầu"></button>
+    <button data-target="sec-gallery" aria-label="Kỷ niệm"></button>
+    <button data-target="sec-letter" aria-label="Lá thư"></button>
+    <button data-target="sec-cake" aria-label="Bánh trung thu"></button>
+    <button data-target="sec-wish" aria-label="Đèn ước"></button>
+  </nav>
+
+  <button class="sound-toggle" id="soundToggle" aria-label="Bật nhạc nền">🔇</button>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="sec-hero">
+    <div class="parallax-layer clouds" data-depth="12">
+      <svg class="c1" viewBox="0 0 400 80" width="400" height="80">
+        <ellipse cx="80" cy="40" rx="70" ry="20" fill="#cfd0f2" opacity=".5" />
+        <ellipse cx="150" cy="30" rx="50" ry="16" fill="#cfd0f2" opacity=".4" />
+      </svg>
+      <svg class="c2" viewBox="0 0 400 80" width="400" height="80">
+        <ellipse cx="260" cy="45" rx="90" ry="18" fill="#cfd0f2" opacity=".35" />
       </svg>
     </div>
-  </div>
 
-  <div class="parallax-layer mountains" data-depth="6">
-    <svg viewBox="0 0 1440 200" preserveAspectRatio="none"><path fill="#171b4c" d="M0,200 L0,140 C200,60 260,150 360,110 C440,80 520,40 600,90 C680,140 760,70 840,100 C920,130 1000,60 1080,95 C1160,130 1240,80 1320,110 C1380,130 1420,120 1440,130 L1440,200 Z"/></svg>
-  </div>
-
-  <div class="tree-scene">
-    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
-      <path fill="#0a0e2c" d="M0,220 L0,130 C120,80 180,150 260,110 C300,90 320,40 340,80 C355,105 380,90 400,115 C460,160 520,100 580,125 C640,150 700,80 760,110 C820,140 880,90 940,115 C1000,140 1060,80 1120,105 C1180,130 1240,90 1300,115 C1360,140 1400,120 1440,135 L1440,220 Z"/>
-      <!-- overhanging branch, top-left -->
-      <path d="M-10,0 C60,10 100,55 150,70 C120,60 90,50 40,30 C20,20 0,10 -10,0Z" fill="#0a0e2c"/>
-      <circle cx="128" cy="66" r="9" fill="#e05a4e"/>
-      <line x1="128" y1="57" x2="128" y2="50" stroke="#5a3d1f" stroke-width="1.5"/>
-      <circle cx="176" cy="86" r="8" fill="#e8935a"/>
-      <line x1="176" y1="78" x2="176" y2="71" stroke="#5a3d1f" stroke-width="1.5"/>
-      <!-- couple silhouette, bottom center -->
-      <g transform="translate(676,150)">
-        <circle cx="0" cy="0" r="9" fill="#0a0e2c"/>
-        <path d="M-11,10 C-11,-2 11,-2 11,10 L11,40 L-11,40 Z" fill="#0a0e2c"/>
-        <circle cx="34" cy="4" r="8" fill="#0a0e2c"/>
-        <path d="M24,13 C24,3 44,3 44,13 L44,40 L24,40 Z" fill="#0a0e2c"/>
-        <circle cx="17" cy="22" r="6" fill="#f3c969" opacity=".85"/>
-        <line x1="17" y1="16" x2="17" y2="10" stroke="#5a3d1f" stroke-width="1.2"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="hero-content">
-    <p class="eyebrow">RẰM THÁNG TÁM · TRUNG THU 🏮</p>
-    <h1>Trăng tròn năm nay,<br>anh chỉ muốn ngắm cùng <em contenteditable="true" spellcheck="false">em</em></h1>
-    <p class="sub" contenteditable="true" spellcheck="false">Giữa muôn ngàn ánh đèn lồng đang bay lên trời đêm nay, có một lời chúc nhỏ đang tìm đến em.</p>
-  </div>
-
-  <div class="scroll-hint">
-    <span>lướt xuống để xem hết những điều anh chuẩn bị</span>
-    <span class="arrow"></span>
-  </div>
-</section>
-
-<!-- ===================== GALLERY ===================== -->
-<section id="sec-gallery">
-  <input type="file" accept="image/*" id="fileInput" style="display:none">
-</section>
-
-<!-- ===================== LETTER ===================== -->
-<section id="sec-letter">
-  <p class="section-kicker reveal">MỘT LÁ THƯ, GỬI DƯỚI ÁNH TRĂNG RẰM</p>
-  <h2 class="section-title reveal">Gửi người trong lòng anh</h2>
-
-  <div class="letter-wrap reveal" id="letterWrap">
-    <div class="envelope" id="envelope">
-      <div class="seal">🏮</div>
-      <p>Có một lá thư đang chờ được mở</p>
-      <p class="tap-label">bấm vào đây để bóc niêm phong</p>
+    <div class="moon-wrap" data-depth="26">
+      <div class="moon">
+        <svg class="rabbit" viewBox="0 0 100 100" aria-hidden="true">
+          <path fill="#b98a4a"
+            d="M46 30c-2-6-1-12 3-14 3 6 3 11 1 15 3-1 6 0 8 3 3-6 8-9 12-7-1 6-6 10-11 11 4 2 6 6 5 11-6 1-11-2-13-7-1 5-5 8-10 8-6 0-11-5-11-11 0-5 3-9 8-11-3-2-4-6-2-9 3 1 6 3 10 6z" />
+        </svg>
+      </div>
     </div>
-    <div class="letter" id="letterCard">
-      <h3>Trung Thu này, em có biết không...</h3>
-      <p class="letter-body" id="letterText"></p>
-      <p class="signature" contenteditable="true" spellcheck="false">— thương em, hơn cả những chiếc đèn lồng đang bay</p>
+
+    <div class="parallax-layer mountains" data-depth="6">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+        <path fill="#171b4c"
+          d="M0,200 L0,140 C200,60 260,150 360,110 C440,80 520,40 600,90 C680,140 760,70 840,100 C920,130 1000,60 1080,95 C1160,130 1240,80 1320,110 C1380,130 1420,120 1440,130 L1440,200 Z" />
+      </svg>
     </div>
-  </div>
-</section>
 
-<!-- ===================== MOONCAKES ===================== -->
-<section id="sec-cake">
-  <p class="section-kicker reveal">BÓC MỘT CHIẾC BÁNH</p>
-  <h2 class="section-title reveal">Trong mỗi chiếc bánh là một điều anh muốn nói</h2>
-  <div class="cake-grid reveal" id="cakeGrid">
-    <!-- generated by JS -->
-  </div>
-</section>
+    <div class="tree-scene">
+      <svg viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="#0a0e2c"
+          d="M0,220 L0,130 C120,80 180,150 260,110 C300,90 320,40 340,80 C355,105 380,90 400,115 C460,160 520,100 580,125 C640,150 700,80 760,110 C820,140 880,90 940,115 C1000,140 1060,80 1120,105 C1180,130 1240,90 1300,115 C1360,140 1400,120 1440,135 L1440,220 Z" />
+        <!-- overhanging branch, top-left -->
+        <path d="M-10,0 C60,10 100,55 150,70 C120,60 90,50 40,30 C20,20 0,10 -10,0Z" fill="#0a0e2c" />
+        <circle cx="128" cy="66" r="9" fill="#e05a4e" />
+        <line x1="128" y1="57" x2="128" y2="50" stroke="#5a3d1f" stroke-width="1.5" />
+        <circle cx="176" cy="86" r="8" fill="#e8935a" />
+        <line x1="176" y1="78" x2="176" y2="71" stroke="#5a3d1f" stroke-width="1.5" />
+        <!-- couple silhouette, bottom center -->
+        <g transform="translate(676,150)">
+          <circle cx="0" cy="0" r="9" fill="#0a0e2c" />
+          <path d="M-11,10 C-11,-2 11,-2 11,10 L11,40 L-11,40 Z" fill="#0a0e2c" />
+          <circle cx="34" cy="4" r="8" fill="#0a0e2c" />
+          <path d="M24,13 C24,3 44,3 44,13 L44,40 L24,40 Z" fill="#0a0e2c" />
+          <circle cx="17" cy="22" r="6" fill="#f3c969" opacity=".85" />
+          <line x1="17" y1="16" x2="17" y2="10" stroke="#5a3d1f" stroke-width="1.2" />
+        </g>
+      </svg>
+    </div>
 
-<!-- ===================== WISH ===================== -->
-<section class="wish-section" id="sec-wish">
-  <p class="section-kicker reveal">THẢ MỘT CHIẾC ĐÈN ƯỚC</p>
-  <h2 class="section-title reveal">Viết điều em ước cho đôi mình</h2>
-  <p class="sub reveal" style="margin:0 auto 1.8rem; max-width:34ch; color:#d9d3ef;">
-    Gõ một điều ước be bé, thả nó bay lên trời — nó sẽ hóa thành một ngôi sao nhỏ, ở lại bầu trời này mãi mãi.
-  </p>
+    <div class="hero-content">
+      <p class="eyebrow">RẰM THÁNG TÁM · TRUNG THU 🏮</p>
+      <h1>Trăng tròn năm nay,<br>anh chỉ muốn ngắm cùng <em contenteditable="true" spellcheck="false">em</em></h1>
+      <p class="sub" contenteditable="true" spellcheck="false">Giữa muôn ngàn ánh đèn lồng đang bay lên trời đêm nay, có
+        một lời chúc nhỏ đang tìm đến em.</p>
+    </div>
 
-  <div class="wish-input reveal">
-    <input id="wishText" type="text" maxlength="60" placeholder="Ví dụ: mãi bên nhau như trăng với sao...">
-    <button class="btn-lantern" id="launchBtn">🏮 Thả đèn ước</button>
-  </div>
-  <p class="wish-hint reveal" id="wishHint">Chạm nút để thắp lên điều ước của em</p>
-  <p class="wish-count reveal" id="wishCount"></p>
-</section>
+    <div class="scroll-hint">
+      <span>lướt xuống để xem hết những điều anh chuẩn bị</span>
+      <span class="arrow"></span>
+    </div>
+  </section>
 
-<footer contenteditable="false">
-  Chúc <span contenteditable="true" spellcheck="false">em</span> một mùa Trung Thu tròn đầy, ấm áp — như trăng, như lòng anh dành cho em. <span class="heart">♥</span>
-</footer>
+  <!-- ===================== GALLERY ===================== -->
+  <section id="sec-gallery">
+    <input type="file" accept="image/*" id="fileInput" style="display:none">
+  </section>
 
-<script>
-/* ============ PRELOADER ============ */
-const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const preloader = document.getElementById('preloader');
-if(prefersReduced){
-  preloader.classList.add('hidden');
-} else {
-  setTimeout(() => preloader.classList.add('opening'), 500);
-  setTimeout(() => preloader.classList.add('hidden'), 1550);
-}
+  <!-- ===================== LETTER ===================== -->
+  <section id="sec-letter">
+    <p class="section-kicker reveal">MỘT LÁ THƯ, GỬI DƯỚI ÁNH TRĂNG RẰM</p>
+    <h2 class="section-title reveal">Gửi người trong lòng anh</h2>
 
-/* ============ TIP BADGE DISMISS ============ */
-document.getElementById('tipBadge').addEventListener('click', function(){ this.style.opacity = 0; });
+    <div class="letter-wrap reveal" id="letterWrap">
+      <div class="envelope" id="envelope">
+        <div class="seal">🏮</div>
+        <p>Có một lá thư đang chờ được mở</p>
+        <p class="tap-label">bấm vào đây để bóc niêm phong</p>
+      </div>
+      <div class="letter" id="letterCard">
+        <h3>Trung Thu này, em có biết không...</h3>
+        <p class="letter-body" id="letterText"></p>
+        <p class="signature" contenteditable="true" spellcheck="false">— thương em, hơn cả những chiếc đèn lồng đang bay
+        </p>
+      </div>
+    </div>
+  </section>
 
-/* ============ CANVAS: stars, shooting stars, petals, fireflies, wish-stars ============ */
-const canvas = document.getElementById('sky');
-const ctx = canvas.getContext('2d');
-let W, H, stars = [], fireflies = [], petals = [], shootingStars = [];
-const wishStars = [];
+  <!-- ===================== MOONCAKES ===================== -->
+  <section id="sec-cake">
+    <p class="section-kicker reveal">BÓC MỘT CHIẾC BÁNH</p>
+    <h2 class="section-title reveal">Trong mỗi chiếc bánh là một điều anh muốn nói</h2>
+    <div class="cake-grid reveal" id="cakeGrid">
+      <!-- generated by JS -->
+    </div>
+  </section>
 
-function resize(){
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  buildField();
-}
+  <!-- ===================== WISH ===================== -->
+  <section class="wish-section" id="sec-wish">
+    <p class="section-kicker reveal">THẢ MỘT CHIẾC ĐÈN ƯỚC</p>
+    <h2 class="section-title reveal">Viết điều em ước cho đôi mình</h2>
+    <p class="sub reveal" style="margin:0 auto 1.8rem; max-width:34ch; color:#d9d3ef;">
+      Gõ một điều ước be bé, thả nó bay lên trời — nó sẽ hóa thành một ngôi sao nhỏ, ở lại bầu trời này mãi mãi.
+    </p>
 
-function buildField(){
-  const starCount = Math.min(Math.round((W*H)/9000), 200);
-  stars = Array.from({length: starCount}, () => ({
-    x: Math.random()*W, y: Math.random()*H*0.75,
-    r: Math.random()*1.4 + 0.3, tw: Math.random()*Math.PI*2, speed: Math.random()*0.02 + 0.008
-  }));
+    <div class="wish-input reveal">
+      <input id="wishText" type="text" maxlength="60" placeholder="Ví dụ: mãi bên nhau như trăng với sao...">
+      <button class="btn-lantern" id="launchBtn">🏮 Thả đèn ước</button>
+    </div>
+    <p class="wish-hint reveal" id="wishHint">Chạm nút để thắp lên điều ước của em</p>
+    <p class="wish-count reveal" id="wishCount"></p>
+  </section>
 
-  fireflies = prefersReduced ? [] : Array.from({length: 22}, () => ({
-    x: Math.random()*W, y: H*0.55 + Math.random()*H*0.45,
-    vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.2, phase: Math.random()*Math.PI*2
-  }));
+  <footer contenteditable="false">
+    Chúc <span contenteditable="true" spellcheck="false">em</span> một mùa Trung Thu tròn đầy, ấm áp — như trăng, như
+    lòng anh dành cho em. <span class="heart">♥</span>
+  </footer>
 
-  petals = prefersReduced ? [] : Array.from({length: 34}, () => ({
-    x: Math.random()*W, y: Math.random()*H,
-    r: Math.random()*3 + 2, vy: Math.random()*0.35 + 0.15, vx: Math.random()*0.4 - 0.2,
-    rot: Math.random()*Math.PI*2, vr: (Math.random()-0.5)*0.02,
-    hue: Math.random() > 0.5 ? '243,201,105' : '224,90,78'
-  }));
-}
+  <script>
+    /* ============ PRELOADER ============ */
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const preloader = document.getElementById('preloader');
+    if (prefersReduced) {
+      preloader.classList.add('hidden');
+    } else {
+      setTimeout(() => preloader.classList.add('opening'), 500);
+      setTimeout(() => preloader.classList.add('hidden'), 1550);
+    }
 
-function maybeSpawnShootingStar(){
-  if(prefersReduced) return;
-  if(Math.random() < 0.006 && shootingStars.length < 2){
-    const startX = Math.random()*W*0.6 + W*0.2;
-    shootingStars.push({ x:startX, y:-10, vx: 3.2+Math.random()*2, vy: 2+Math.random()*1.2, life:1, trail:[] });
-  }
-}
+    /* ============ TIP BADGE DISMISS ============ */
+    document.getElementById('tipBadge').addEventListener('click', function () { this.style.opacity = 0; });
 
-function drawFrame(t){
-  ctx.clearRect(0,0,W,H);
+    /* ============ CANVAS: stars, shooting stars, petals, fireflies, wish-stars ============ */
+    const canvas = document.getElementById('sky');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [], fireflies = [], petals = [], shootingStars = [];
+    const wishStars = [];
 
-  stars.forEach(s => {
-    const alpha = 0.4 + Math.sin(t*s.speed + s.tw)*0.4;
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(255,250,235,${Math.max(alpha,0.15)})`;
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-    ctx.fill();
-  });
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      buildField();
+    }
 
-  wishStars.forEach(s => {
-    const alpha = 0.55 + Math.sin(t*0.003 + s.tw)*0.35;
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(255,227,163,${Math.max(alpha,0.3)})`;
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.fillStyle = `rgba(255,227,163,${alpha*0.25})`;
-    ctx.arc(s.x, s.y, s.r*3, 0, Math.PI*2);
-    ctx.fill();
-  });
+    function buildField() {
+      const starCount = Math.min(Math.round((W * H) / 9000), 200);
+      stars = Array.from({ length: starCount }, () => ({
+        x: Math.random() * W, y: Math.random() * H * 0.75,
+        r: Math.random() * 1.4 + 0.3, tw: Math.random() * Math.PI * 2, speed: Math.random() * 0.02 + 0.008
+      }));
 
-  fireflies.forEach(f => {
-    f.x += f.vx; f.y += f.vy;
-    if(f.x < 0) f.x = W; if(f.x > W) f.x = 0;
-    if(f.y < H*0.5) f.y = H; if(f.y > H) f.y = H*0.5;
-    const glow = 0.5 + Math.sin(t*0.002 + f.phase)*0.5;
-    const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 6);
-    grad.addColorStop(0, `rgba(243,201,105,${0.8*glow})`);
-    grad.addColorStop(1, 'rgba(243,201,105,0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath(); ctx.arc(f.x, f.y, 6, 0, Math.PI*2); ctx.fill();
-  });
+      fireflies = prefersReduced ? [] : Array.from({ length: 22 }, () => ({
+        x: Math.random() * W, y: H * 0.55 + Math.random() * H * 0.45,
+        vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.2, phase: Math.random() * Math.PI * 2
+      }));
 
-  petals.forEach(p => {
-    p.y += p.vy; p.x += p.vx + Math.sin(t*0.001 + p.rot)*0.3; p.rot += p.vr;
-    if(p.y > H+10){ p.y = -10; p.x = Math.random()*W; }
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(p.rot);
-    ctx.fillStyle = `rgba(${p.hue},0.55)`;
-    ctx.beginPath();
-    ctx.ellipse(0,0,p.r,p.r*0.6,0,0,Math.PI*2);
-    ctx.fill();
-    ctx.restore();
-  });
+      petals = prefersReduced ? [] : Array.from({ length: 34 }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 3 + 2, vy: Math.random() * 0.35 + 0.15, vx: Math.random() * 0.4 - 0.2,
+        rot: Math.random() * Math.PI * 2, vr: (Math.random() - 0.5) * 0.02,
+        hue: Math.random() > 0.5 ? '243,201,105' : '224,90,78'
+      }));
+    }
 
-  maybeSpawnShootingStar();
-  shootingStars.forEach(s => {
-    s.trail.push({x:s.x, y:s.y});
-    if(s.trail.length > 14) s.trail.shift();
-    s.x += s.vx; s.y += s.vy; s.life -= 0.012;
-    ctx.beginPath();
-    s.trail.forEach((pt, i) => {
-      ctx.strokeStyle = `rgba(255,250,235,${(i/s.trail.length)*s.life})`;
-      ctx.lineWidth = 1.6;
-      if(i===0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
-    });
-    ctx.stroke();
-  });
-  shootingStars = shootingStars.filter(s => s.life > 0 && s.y < H+20);
+    function maybeSpawnShootingStar() {
+      if (prefersReduced) return;
+      if (Math.random() < 0.006 && shootingStars.length < 2) {
+        const startX = Math.random() * W * 0.6 + W * 0.2;
+        shootingStars.push({ x: startX, y: -10, vx: 3.2 + Math.random() * 2, vy: 2 + Math.random() * 1.2, life: 1, trail: [] });
+      }
+    }
 
-  if(!prefersReduced) requestAnimationFrame(drawFrame);
-}
+    function drawFrame(t) {
+      ctx.clearRect(0, 0, W, H);
 
-window.addEventListener('resize', resize);
-resize();
-requestAnimationFrame(drawFrame);
-if(prefersReduced) drawFrame(0);
+      stars.forEach(s => {
+        const alpha = 0.4 + Math.sin(t * s.speed + s.tw) * 0.4;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,250,235,${Math.max(alpha, 0.15)})`;
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-/* ============ PARALLAX ON MOUSEMOVE ============ */
-if(!prefersReduced){
-  document.addEventListener('mousemove', (e) => {
-    const nx = (e.clientX / window.innerWidth - 0.5);
-    const ny = (e.clientY / window.innerHeight - 0.5);
-    document.querySelectorAll('.parallax-layer').forEach(layer => {
-      const depth = parseFloat(layer.dataset.depth) || 10;
-      layer.style.transform = `translate(${nx*depth}px, ${ny*depth*0.5}px)`;
-    });
-  });
-}
+      wishStars.forEach(s => {
+        const alpha = 0.55 + Math.sin(t * 0.003 + s.tw) * 0.35;
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,227,163,${Math.max(alpha, 0.3)})`;
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(255,227,163,${alpha * 0.25})`;
+        ctx.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
-/* ============ AMBIENT + WISH LANTERNS ============ */
-const field = document.getElementById('lanternField');
+      fireflies.forEach(f => {
+        f.x += f.vx; f.y += f.vy;
+        if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
+        if (f.y < H * 0.5) f.y = H; if (f.y > H) f.y = H * 0.5;
+        const glow = 0.5 + Math.sin(t * 0.002 + f.phase) * 0.5;
+        const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 6);
+        grad.addColorStop(0, `rgba(243,201,105,${0.8 * glow})`);
+        grad.addColorStop(1, 'rgba(243,201,105,0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.arc(f.x, f.y, 6, 0, Math.PI * 2); ctx.fill();
+      });
 
-function spawnAmbientLantern(){
-  const el = document.createElement('div');
-  el.className = 'lantern' + (Math.random() > 0.6 ? ' red' : '');
-  const duration = 9 + Math.random()*6;
-  const delay = Math.random()*8;
-  el.style.left = (Math.random()*100) + 'vw';
-  el.style.animationDuration = duration + 's';
-  el.style.animationDelay = delay + 's';
-  el.innerHTML = `<div class="string"></div><div class="cap"></div><div class="body"></div><div class="base"></div>`;
-  field.appendChild(el);
-  setTimeout(() => el.remove(), (duration+delay)*1000 + 500);
-}
+      petals.forEach(p => {
+        p.y += p.vy; p.x += p.vx + Math.sin(t * 0.001 + p.rot) * 0.3; p.rot += p.vr;
+        if (p.y > H + 10) { p.y = -10; p.x = Math.random() * W; }
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = `rgba(${p.hue},0.55)`;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.r, p.r * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
 
-if(!prefersReduced){
-  for(let i=0;i<6;i++) spawnAmbientLantern();
-  setInterval(spawnAmbientLantern, 3400);
-} else {
-  for(let i=0;i<3;i++){
-    const el = document.createElement('div');
-    el.className = 'lantern';
-    el.style.left = (15 + i*30) + 'vw';
-    el.style.bottom = '10vh';
-    el.style.animation = 'none';
-    el.innerHTML = `<div class="string"></div><div class="cap"></div><div class="body"></div><div class="base"></div>`;
-    field.appendChild(el);
-  }
-}
+      maybeSpawnShootingStar();
+      shootingStars.forEach(s => {
+        s.trail.push({ x: s.x, y: s.y });
+        if (s.trail.length > 14) s.trail.shift();
+        s.x += s.vx; s.y += s.vy; s.life -= 0.012;
+        ctx.beginPath();
+        s.trail.forEach((pt, i) => {
+          ctx.strokeStyle = `rgba(255,250,235,${(i / s.trail.length) * s.life})`;
+          ctx.lineWidth = 1.6;
+          if (i === 0) ctx.moveTo(pt.x, pt.y); else ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.stroke();
+      });
+      shootingStars = shootingStars.filter(s => s.life > 0 && s.y < H + 20);
 
-let wishCountNum = 0;
-const wishCountEl = document.getElementById('wishCount');
+      if (!prefersReduced) requestAnimationFrame(drawFrame);
+    }
 
-function launchWishLantern(wishValue){
-  const dim = document.getElementById('wishDim');
-  dim.classList.add('active');
-  setTimeout(() => dim.classList.remove('active'), 6800);
+    window.addEventListener('resize', resize);
+    resize();
+    requestAnimationFrame(drawFrame);
+    if (prefersReduced) drawFrame(0);
 
-  const outer = document.createElement('div');
-  outer.className = 'lantern-big-outer';
-  const inner = document.createElement('div');
-  inner.className = 'lantern-big' + (Math.random() > 0.6 ? ' red' : '');
-  const text = (wishValue && wishValue.trim()) ? wishValue.trim() : 'mãi bên nhau như trăng với sao';
-  inner.innerHTML = `
+    /* ============ PARALLAX ON MOUSEMOVE ============ */
+    if (!prefersReduced) {
+      document.addEventListener('mousemove', (e) => {
+        const nx = (e.clientX / window.innerWidth - 0.5);
+        const ny = (e.clientY / window.innerHeight - 0.5);
+        document.querySelectorAll('.parallax-layer').forEach(layer => {
+          const depth = parseFloat(layer.dataset.depth) || 10;
+          layer.style.transform = `translate(${nx * depth}px, ${ny * depth * 0.5}px)`;
+        });
+      });
+    }
+
+    /* ============ AMBIENT + WISH LANTERNS ============ */
+    const field = document.getElementById('lanternField');
+
+    function spawnAmbientLantern() {
+      const el = document.createElement('div');
+      el.className = 'lantern' + (Math.random() > 0.6 ? ' red' : '');
+      const duration = 9 + Math.random() * 6;
+      const delay = Math.random() * 8;
+      el.style.left = (Math.random() * 100) + 'vw';
+      el.style.animationDuration = duration + 's';
+      el.style.animationDelay = delay + 's';
+      el.innerHTML = `<div class="string"></div><div class="cap"></div><div class="body"></div><div class="base"></div>`;
+      field.appendChild(el);
+      setTimeout(() => el.remove(), (duration + delay) * 1000 + 500);
+    }
+
+    if (!prefersReduced) {
+      for (let i = 0; i < 6; i++) spawnAmbientLantern();
+      setInterval(spawnAmbientLantern, 3400);
+    } else {
+      for (let i = 0; i < 3; i++) {
+        const el = document.createElement('div');
+        el.className = 'lantern';
+        el.style.left = (15 + i * 30) + 'vw';
+        el.style.bottom = '10vh';
+        el.style.animation = 'none';
+        el.innerHTML = `<div class="string"></div><div class="cap"></div><div class="body"></div><div class="base"></div>`;
+        field.appendChild(el);
+      }
+    }
+
+    let wishCountNum = 0;
+    const wishCountEl = document.getElementById('wishCount');
+
+    function launchWishLantern(wishValue) {
+      const dim = document.getElementById('wishDim');
+      dim.classList.add('active');
+      setTimeout(() => dim.classList.remove('active'), 6800);
+
+      const outer = document.createElement('div');
+      outer.className = 'lantern-big-outer';
+      const inner = document.createElement('div');
+      inner.className = 'lantern-big' + (Math.random() > 0.6 ? ' red' : '');
+      const text = (wishValue && wishValue.trim()) ? wishValue.trim() : 'mãi bên nhau như trăng với sao';
+      inner.innerHTML = `
     <div class="string-big"></div>
     <div class="cap-big"></div>
-    <div class="body-big"><div class="wish-text">${text.replace(/</g,'&lt;')}</div></div>
+    <div class="body-big"><div class="wish-text">${text.replace(/</g, '&lt;')}</div></div>
     <div class="base-big"></div>
   `;
-  outer.appendChild(inner);
-  document.body.appendChild(outer);
+      outer.appendChild(inner);
+      document.body.appendChild(outer);
 
-  playBigChime();
+      playBigChime();
 
-  setTimeout(() => {
-    outer.remove();
-    wishStars.push({
-      x: W/2 + (Math.random()-0.5)*W*0.3,
-      y: H*0.1 + Math.random()*H*0.12,
-      r: 2.1 + Math.random()*0.9,
-      tw: Math.random()*Math.PI*2
+      setTimeout(() => {
+        outer.remove();
+        wishStars.push({
+          x: W / 2 + (Math.random() - 0.5) * W * 0.3,
+          y: H * 0.1 + Math.random() * H * 0.12,
+          r: 2.1 + Math.random() * 0.9,
+          tw: Math.random() * Math.PI * 2
+        });
+      }, prefersReduced ? 50 : 8500 * 0.94);
+
+      wishCountNum++;
+      wishCountEl.textContent = wishCountNum === 1
+        ? 'có 1 ngôi sao ước đang lấp lánh trên trời'
+        : `có ${wishCountNum} ngôi sao ước đang lấp lánh trên trời`;
+    }
+
+    /* ============ SCROLL REVEAL ============ */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('in-view'); });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* ============ DOTS NAV ============ */
+    const dotsButtons = document.querySelectorAll('.dots-nav button');
+    dotsButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById(btn.dataset.target).scrollIntoView({ behavior: 'smooth' });
+      });
     });
-  }, prefersReduced ? 50 : 8500*0.94);
+    const sectionIds = ['sec-hero', 'sec-gallery', 'sec-letter', 'sec-cake', 'sec-wish'];
+    const sectionEls = sectionIds.map(id => document.getElementById(id));
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = sectionEls.indexOf(entry.target);
+          dotsButtons.forEach(b => b.classList.remove('active'));
+          if (dotsButtons[idx]) dotsButtons[idx].classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+    sectionEls.forEach(el => el && navObserver.observe(el));
 
-  wishCountNum++;
-  wishCountEl.textContent = wishCountNum === 1
-    ? 'có 1 ngôi sao ước đang lấp lánh trên trời'
-    : `có ${wishCountNum} ngôi sao ước đang lấp lánh trên trời`;
-}
+    /* ============ GALLERY PHOTO UPLOAD ============ */
+    const fileInput = document.getElementById('fileInput');
+    let activeSlot = null;
+    document.querySelectorAll('.photo-slot').forEach(slot => {
+      slot.addEventListener('click', () => { activeSlot = slot; fileInput.click(); });
+    });
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file || !activeSlot) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        activeSlot.style.backgroundImage = `url(${ev.target.result})`;
+        activeSlot.classList.add('has-photo');
+        activeSlot.textContent = '';
+      };
+      reader.readAsDataURL(file);
+    });
 
-/* ============ SCROLL REVEAL ============ */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('in-view'); });
-}, { threshold: 0.2 });
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    /* ============ LETTER: ENVELOPE OPEN + TYPEWRITER ============ */
+    const letterMessage = `Trăng đêm nay tròn thật, nhưng anh nghĩ nếu một ngày nào đó được ngồi bên cạnh em ngắm trăng, có lẽ đêm ấy sẽ còn trọn vẹn hơn nhiều.
 
-/* ============ DOTS NAV ============ */
-const dotsButtons = document.querySelectorAll('.dots-nav button');
-dotsButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.getElementById(btn.dataset.target).scrollIntoView({ behavior:'smooth' });
-  });
-});
-const sectionIds = ['sec-hero','sec-gallery','sec-letter','sec-cake','sec-wish'];
-const sectionEls = sectionIds.map(id => document.getElementById(id));
-const navObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      const idx = sectionEls.indexOf(entry.target);
-      dotsButtons.forEach(b => b.classList.remove('active'));
-      if(dotsButtons[idx]) dotsButtons[idx].classList.add('active');
+Anh vẫn nhớ lần đầu gặp em trên một phiên live, rồi từ những người xa lạ trở thành bạn bè. Chỉ sau một ngày được em quan tâm, anh đã nhận ra trong lòng mình có một cảm xúc thật đặc biệt dành cho em. Đến bây giờ, khi hai đứa đang trên con đường tìm hiểu nhau, anh càng trân trọng những điều nhỏ bé mà em mang đến.
+
+Anh biết vì ở xa nên những lúc em bệnh, lúc em buồn, anh không thể ở cạnh để chăm sóc hay ôm em một cái. Nhưng mỗi sáng thức dậy, điều anh mong chờ vẫn là một tin nhắn từ em, được biết hôm nay em thế nào, có vui không, có điều gì khiến em mệt mỏi không.
+
+Trung Thu năm nay, anh chưa thể cùng em đi dưới ánh đèn lồng hay ngồi cạnh nhau thưởng thức một miếng bánh. Nhưng nếu mọi chuyện thuận lợi, anh mong một ngày không xa, anh sẽ có cơ hội được đón Trung Thu bên cạnh em, cùng ngắm trăng, cùng trò chuyện và lưu giữ những kỷ niệm thật đẹp của hai đứa.
+
+Chúc em một mùa Trung Thu thật ấm áp, thật ngọt ngào. Mong em luôn vui vẻ, bình an, và hy vọng những ngày tháng phía trước, anh vẫn có thể là người được đồng hành cùng em, dù là từ xa hay một ngày nào đó, ngay bên cạnh em. 🌙`;
+
+    const envelope = document.getElementById('envelope');
+    const letterCard = document.getElementById('letterCard');
+    const letterTextEl = document.getElementById('letterText');
+    let opened = false;
+
+    function openLetter() {
+      if (opened) return;
+      opened = true;
+      envelope.classList.add('gone');
+      letterCard.classList.add('visible');
+      playChime();
+
+      if (prefersReduced) {
+        letterTextEl.textContent = letterMessage;
+        letterTextEl.contentEditable = 'true';
+        return;
+      }
+      let i = 0;
+      const cursor = document.createElement('span');
+      cursor.className = 'cursor';
+      function step() {
+        if (i <= letterMessage.length) {
+          letterTextEl.textContent = letterMessage.slice(0, i);
+          letterTextEl.appendChild(cursor);
+          i++;
+          setTimeout(step, 16);
+        } else {
+          cursor.remove();
+          letterTextEl.contentEditable = 'true';
+          letterTextEl.spellcheck = false;
+        }
+      }
+      step();
     }
-  });
-}, { threshold: 0.5 });
-sectionEls.forEach(el => el && navObserver.observe(el));
+    envelope.addEventListener('click', openLetter);
+    envelope.addEventListener('keydown', (e) => { if (e.key === 'Enter') openLetter(); });
+    envelope.setAttribute('tabindex', '0');
+    envelope.setAttribute('role', 'button');
 
-/* ============ GALLERY PHOTO UPLOAD ============ */
-const fileInput = document.getElementById('fileInput');
-let activeSlot = null;
-document.querySelectorAll('.photo-slot').forEach(slot => {
-  slot.addEventListener('click', () => { activeSlot = slot; fileInput.click(); });
-});
-fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if(!file || !activeSlot) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    activeSlot.style.backgroundImage = `url(${ev.target.result})`;
-    activeSlot.classList.add('has-photo');
-    activeSlot.textContent = '';
-  };
-  reader.readAsDataURL(file);
-});
+    /* ============ MOONCAKES ============ */
+    const cakeMessages = [
 
-/* ============ LETTER: ENVELOPE OPEN + TYPEWRITER ============ */
+      'Bánh Trung Thu có thể ngọt nhờ nhân bánh, còn những ngày của anh ngọt ngào hơn từ khi có em.',
 
+      'Có những người chỉ cần xuất hiện thôi cũng đủ khiến một ngày bình thường trở nên đáng nhớ, và em là người như thế.',
 
-const envelope = document.getElementById('envelope');
-const letterCard = document.getElementById('letterCard');
-const letterTextEl = document.getElementById('letterText');
-let opened = false;
+      'Anh không biết tương lai sẽ viết nên câu chuyện gì, nhưng anh mong trong những trang giấy ấy, mình vẫn còn có nhau.',
 
-function openLetter(){
-  if(opened) return;
-  opened = true;
-  envelope.classList.add('gone');
-  letterCard.classList.add('visible');
-  playChime();
-
-  if(prefersReduced){
-    letterTextEl.textContent = letterMessage;
-    letterTextEl.contentEditable = 'true';
-    return;
-  }
-  let i = 0;
-  const cursor = document.createElement('span');
-  cursor.className = 'cursor';
-  function step(){
-    if(i <= letterMessage.length){
-      letterTextEl.textContent = letterMessage.slice(0, i);
-      letterTextEl.appendChild(cursor);
-      i++;
-      setTimeout(step, 16);
-    } else {
-      cursor.remove();
-      letterTextEl.contentEditable = 'true';
-      letterTextEl.spellcheck = false;
-    }
-  }
-  step();
-}
-envelope.addEventListener('click', openLetter);
-envelope.addEventListener('keydown', (e) => { if(e.key === 'Enter') openLetter(); });
-envelope.setAttribute('tabindex','0');
-envelope.setAttribute('role','button');
-
-/* ============ MOONCAKES ============ */
-const cakeMessages = [
-
-  'Bánh Trung Thu có thể ngọt nhờ nhân bánh, còn những ngày của anh ngọt ngào hơn từ khi có em.',
-
-  'Có những người chỉ cần xuất hiện thôi cũng đủ khiến một ngày bình thường trở nên đáng nhớ, và em là người như thế.',
-
-  'Anh không biết tương lai sẽ viết nên câu chuyện gì, nhưng anh mong trong những trang giấy ấy, mình vẫn còn có nhau.',
-
-  'Nếu được chọn một điều ước dưới ánh trăng đêm nay, anh chỉ mong em luôn vui, và một ngày nào đó, anh được tự tay trao em chiếc bánh Trung Thu đầu tiên.'
-];
-const cakeGrid = document.getElementById('cakeGrid');
-const cakeEmojis = ['🥮','🐇','🏮','🌕'];
-cakeEmojis.forEach((emo, idx) => {
-  const item = document.createElement('div');
-  item.className = 'mooncake-item';
-  item.innerHTML = `
+      'Nếu được chọn một điều ước dưới ánh trăng đêm nay, anh chỉ mong em luôn vui, và một ngày nào đó, anh được tự tay trao em chiếc bánh Trung Thu đầu tiên.'
+    ];
+    const cakeGrid = document.getElementById('cakeGrid');
+    const cakeEmojis = ['🥮', '🐇', '🏮', '🌕'];
+    cakeEmojis.forEach((emo, idx) => {
+      const item = document.createElement('div');
+      item.className = 'mooncake-item';
+      item.innerHTML = `
     <div class="mooncake">
       <div class="half half-left"><span>${emo}</span></div>
       <div class="half half-right"><span>${emo}</span></div>
@@ -1025,123 +1627,124 @@ cakeEmojis.forEach((emo, idx) => {
     </div>
     <div class="mooncake-label">bấm để bổ ra</div>
   `;
-  const mc = item.querySelector('.mooncake');
-  mc.addEventListener('click', (e) => {
-    const wasCut = item.classList.contains('cut');
-    item.classList.toggle('cut');
-    if(!wasCut){
-      spawnBurst(e.clientX, e.clientY);
-      playChime();
+      const mc = item.querySelector('.mooncake');
+      mc.addEventListener('click', (e) => {
+        const wasCut = item.classList.contains('cut');
+        item.classList.toggle('cut');
+        if (!wasCut) {
+          spawnBurst(e.clientX, e.clientY);
+          playChime();
+        }
+      });
+      cakeGrid.appendChild(item);
+    });
+
+    function spawnBurst(x, y) {
+      const icons = ['✨', '🍂', '🌕', '🏮'];
+      for (let i = 0; i < 10; i++) {
+        const p = document.createElement('div');
+        p.className = 'burst-particle';
+        p.textContent = icons[Math.floor(Math.random() * icons.length)];
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        p.style.opacity = '1';
+        document.body.appendChild(p);
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 40 + Math.random() * 60;
+        requestAnimationFrame(() => {
+          p.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist - 20}px) scale(.6)`;
+          p.style.opacity = '0';
+        });
+        setTimeout(() => p.remove(), 850);
+      }
     }
-  });
-  cakeGrid.appendChild(item);
-});
 
-function spawnBurst(x, y){
-  const icons = ['✨','🍂','🌕','🏮'];
-  for(let i=0;i<10;i++){
-    const p = document.createElement('div');
-    p.className = 'burst-particle';
-    p.textContent = icons[Math.floor(Math.random()*icons.length)];
-    p.style.left = x + 'px';
-    p.style.top = y + 'px';
-    p.style.opacity = '1';
-    document.body.appendChild(p);
-    const angle = Math.random()*Math.PI*2;
-    const dist = 40 + Math.random()*60;
-    requestAnimationFrame(() => {
-      p.style.transform = `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist - 20}px) scale(.6)`;
-      p.style.opacity = '0';
+    /* ============ WISH LAUNCH ============ */
+    const wishInput = document.getElementById('wishText');
+    const launchBtn = document.getElementById('launchBtn');
+    const wishHint = document.getElementById('wishHint');
+
+    launchBtn.addEventListener('click', () => {
+      const val = wishInput.value.trim();
+      launchWishLantern(val);
+      wishHint.textContent = val
+        ? `Điều ước "${val}" đang bay lên trời cùng ánh trăng rằm... 🏮`
+        : 'Một chiếc đèn ước vừa được thả lên trời rồi đó 🏮';
+      wishInput.value = '';
     });
-    setTimeout(() => p.remove(), 850);
-  }
-}
+    wishInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') launchBtn.click(); });
 
-/* ============ WISH LAUNCH ============ */
-const wishInput = document.getElementById('wishText');
-const launchBtn = document.getElementById('launchBtn');
-const wishHint = document.getElementById('wishHint');
+    /* ============ AMBIENT SOUND (Web Audio, synthesized — no external files) ============ */
+    let audio = null;
+    let soundOn = false;
 
-launchBtn.addEventListener('click', () => {
-  const val = wishInput.value.trim();
-  launchWishLantern(val);
-  wishHint.textContent = val
-    ? `Điều ước "${val}" đang bay lên trời cùng ánh trăng rằm... 🏮`
-    : 'Một chiếc đèn ước vừa được thả lên trời rồi đó 🏮';
-  wishInput.value = '';
-});
-wishInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') launchBtn.click(); });
+    function ensureAudio() {
+      if (!audio) {
+        audio = new Audio('music/em.mp4');
+        audio.loop = true;
+        audio.volume = 0.5;
+      }
+    }
 
-/* ============ AMBIENT SOUND (Web Audio, synthesized — no external files) ============ */
-let audio = null;
-let soundOn = false;
+    function pluck(freq, delay = 0, gainMult = 1) {
+      if (!audioCtx) return;
+      const t0 = audioCtx.currentTime + delay;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(0.22 * gainMult, t0 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.2);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(t0);
+      osc.stop(t0 + 2.3);
+    }
 
-function ensureAudio() {
-  if (!audio) {
-    audio = new Audio('music/em.mp4');
-    audio.loop = true;
-    audio.volume = 0.5;
-  }
-}
+    function playChime() {
+      if (!soundOn || !audioCtx) return;
+      pluck(scale[Math.floor(Math.random() * scale.length)] * 2, 0, 1.3);
+    }
 
-function pluck(freq, delay=0, gainMult=1){
-  if(!audioCtx) return;
-  const t0 = audioCtx.currentTime + delay;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = 'triangle';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0, t0);
-  gain.gain.linearRampToValueAtTime(0.22*gainMult, t0 + 0.03);
-  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.2);
-  osc.connect(gain);
-  gain.connect(masterGain);
-  osc.start(t0);
-  osc.stop(t0 + 2.3);
-}
+    function playBigChime() {
+      if (!soundOn || !audioCtx) { return; }
+      const notes = [scale[1], scale[2], scale[4]];
+      notes.forEach((f, i) => pluck(f * 2, i * 0.18, 1.4));
+    }
 
-function playChime(){
-  if(!soundOn || !audioCtx) return;
-  pluck(scale[Math.floor(Math.random()*scale.length)] * 2, 0, 1.3);
-}
+    function scheduleAmbient() {
+      if (!soundOn) return;
+      pluck(scale[Math.floor(Math.random() * scale.length)]);
+      noteTimer = setTimeout(scheduleAmbient, 1600 + Math.random() * 1800);
+    }
 
-function playBigChime(){
-  if(!soundOn || !audioCtx){ return; }
-  const notes = [scale[1], scale[2], scale[4]];
-  notes.forEach((f, i) => pluck(f*2, i*0.18, 1.4));
-}
+    const soundToggle = document.getElementById('soundToggle');
 
-function scheduleAmbient(){
-  if(!soundOn) return;
-  pluck(scale[Math.floor(Math.random()*scale.length)]);
-  noteTimer = setTimeout(scheduleAmbient, 1600 + Math.random()*1800);
-}
+    soundToggle.addEventListener('click', () => {
+      ensureAudio();
 
-const soundToggle = document.getElementById('soundToggle');
+      soundOn = !soundOn;
 
-soundToggle.addEventListener('click', () => {
-  ensureAudio();
+      soundToggle.textContent = soundOn ? '🎵' : '🔇';
+      soundToggle.setAttribute(
+        'aria-label',
+        soundOn ? 'Tắt nhạc nền' : 'Bật nhạc nền'
+      );
 
-  soundOn = !soundOn;
-
-  soundToggle.textContent = soundOn ? '🎵' : '🔇';
-  soundToggle.setAttribute(
-    'aria-label',
-    soundOn ? 'Tắt nhạc nền' : 'Bật nhạc nền'
-  );
-
-  if (soundOn) {
-    audio.play().catch(error => {
-      console.error('Không thể phát nhạc:', error);
-      soundOn = false;
-      soundToggle.textContent = '🔇';
-      soundToggle.setAttribute('aria-label', 'Bật nhạc nền');
+      if (soundOn) {
+        audio.play().catch(error => {
+          console.error('Không thể phát nhạc:', error);
+          soundOn = false;
+          soundToggle.textContent = '🔇';
+          soundToggle.setAttribute('aria-label', 'Bật nhạc nền');
+        });
+      } else {
+        audio.pause();
+      }
     });
-  } else {
-    audio.pause();
-  }
-});
-</script>
+  </script>
 
 </body>
+
 </html>
