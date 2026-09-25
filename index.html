@@ -899,6 +899,15 @@
       opacity: .85;
     }
 
+    .letter-divider {
+      text-align: center;
+      color: var(--gold-soft);
+      font-size: .85rem;
+      letter-spacing: .08em;
+      margin: 3.2rem 0 2.6rem;
+      opacity: .7;
+    }
+
     /* ===================== MOONCAKES ===================== */
     .cake-grid {
       display: flex;
@@ -1253,17 +1262,32 @@
     <p class="section-kicker reveal">MỘT LÁ THƯ, GỬI DƯỚI ÁNH TRĂNG RẰM</p>
     <h2 class="section-title reveal">Gửi người trong lòng anh</h2>
 
-    <div class="letter-wrap reveal" id="letterWrap">
-      <div class="envelope" id="envelope">
+    <div class="letter-wrap reveal" id="letterWrap1">
+      <div class="envelope" id="envelope1">
         <div class="seal">🏮</div>
-        <p>Có một lá thư đang chờ được mở</p>
+        <p>Bức thư thứ nhất đang chờ được mở</p>
         <p class="tap-label">bấm vào đây để bóc niêm phong</p>
       </div>
-      <div class="letter" id="letterCard">
+      <div class="letter" id="letterCard1">
         <h3>Trung Thu này, em có biết không...</h3>
-        <p class="letter-body" id="letterText"></p>
+        <p class="letter-body" id="letterText1"></p>
         <p class="signature" contenteditable="true" spellcheck="false">— thương em, hơn cả những chiếc đèn lồng đang bay
         </p>
+      </div>
+    </div>
+
+    <p class="letter-divider reveal">🌕 · · · 🌕</p>
+
+    <div class="letter-wrap reveal" id="letterWrap2">
+      <div class="envelope" id="envelope2">
+        <div class="seal">🏮</div>
+        <p>Còn đây là bức thư thứ hai</p>
+        <p class="tap-label">bấm vào đây để bóc niêm phong</p>
+      </div>
+      <div class="letter" id="letterCard2">
+        <h3>Và mai sau, khi mình gần nhau hơn...</h3>
+        <p class="letter-body" id="letterText2"></p>
+        <p class="signature" contenteditable="true" spellcheck="false">— của em, mãi mãi</p>
       </div>
     </div>
   </section>
@@ -1308,9 +1332,6 @@
       setTimeout(() => preloader.classList.add('opening'), 500);
       setTimeout(() => preloader.classList.add('hidden'), 1550);
     }
-
-    /* ============ TIP BADGE DISMISS ============ */
-    document.getElementById('tipBadge').addEventListener('click', function () { this.style.opacity = 0; });
 
     /* ============ CANVAS: stars, shooting stars, petals, fireflies, wish-stars ============ */
     const canvas = document.getElementById('sky');
@@ -1550,8 +1571,8 @@
       reader.readAsDataURL(file);
     });
 
-    /* ============ LETTER: ENVELOPE OPEN + TYPEWRITER ============ */
-   const letterMessage = `Trăng đêm nay tròn thật, nhưng anh nghĩ nếu một ngày nào đó được ngồi bên cạnh em ngắm trăng, có lẽ đêm ấy sẽ còn trọn vẹn hơn nhiều.
+    /* ============ LETTER: ENVELOPE OPEN + TYPEWRITER (2 separate letters) ============ */
+    const letterMessage1 = `Trăng đêm nay tròn thật, nhưng anh nghĩ nếu một ngày nào đó được ngồi bên cạnh em ngắm trăng, có lẽ đêm ấy sẽ còn trọn vẹn hơn nhiều.
 
 Anh vẫn nhớ lần đầu gặp em trên một phiên live, rồi từ những người xa lạ trở thành bạn bè. Chỉ sau một ngày được em quan tâm, anh đã nhận ra trong lòng mình có một cảm xúc thật đặc biệt dành cho em. Đến bây giờ, khi hai đứa đang trên con đường tìm hiểu nhau, anh càng trân trọng những điều nhỏ bé mà em mang đến.
 
@@ -1561,9 +1582,9 @@ Anh mong sau này, dù em có chuyện vui hay chuyện buồn, em đều có th
 
 Anh không biết mình có thể làm mọi thứ thật hoàn hảo hay không, nhưng anh muốn mỗi khi em mệt mỏi, em vẫn có thể tìm đến anh. Anh muốn mình có thể cùng nhau nói về những chuyện vui, những chuyện buồn, những điều nhỏ nhặt trong ngày, để khoảng cách giữa hai đứa không trở thành lý do khiến chúng ta cảm thấy xa nhau.
 
-Trung Thu năm nay, anh chưa thể cùng em đi dưới ánh đèn lồng hay ngồi cạnh nhau thưởng thức một miếng bánh. Nhưng nếu mọi chuyện thuận lợi, anh mong một ngày không xa, anh sẽ có cơ hội được đón Trung Thu bên cạnh em, cùng ngắm trăng, cùng trò chuyện và lưu giữ những kỷ niệm thật đẹp của hai đứa.
+Trung Thu năm nay, anh chưa thể cùng em đi dưới ánh đèn lồng hay ngồi cạnh nhau thưởng thức một miếng bánh. Nhưng nếu mọi chuyện thuận lợi, anh mong một ngày không xa, anh sẽ có cơ hội được đón Trung Thu bên cạnh em, cùng ngắm trăng, cùng trò chuyện và lưu giữ những kỷ niệm thật đẹp của hai đứa. 🌙`;
 
-Anh cũng mong cuộc sống sau này của anh sẽ có em trong đó. Anh không muốn mãi chỉ có thể nhắc em đi về cẩn thận, nhớ ăn uống đầy đủ hay nhớ uống thuốc. Anh muốn một ngày nào đó, chính anh có thể đưa em về, tự tay nấu cho em một bữa cơm, ngồi nhìn em ăn thật ngon rồi yên tâm rằng hôm nay em đã được chăm sóc thật tốt.
+    const letterMessage2 = `Anh cũng mong cuộc sống sau này của anh sẽ có em trong đó. Anh không muốn mãi chỉ có thể nhắc em đi về cẩn thận, nhớ ăn uống đầy đủ hay nhớ uống thuốc. Anh muốn một ngày nào đó, chính anh có thể đưa em về, tự tay nấu cho em một bữa cơm, ngồi nhìn em ăn thật ngon rồi yên tâm rằng hôm nay em đã được chăm sóc thật tốt.
 
 Có thể những điều đó rất bình thường, nhưng với anh, đó lại là những điều anh thật sự mong chờ. Anh muốn được ở cạnh em trong những ngày bình thường nhất, cùng em ăn một bữa cơm, cùng nhau đi đâu đó, cùng kể cho nhau nghe những chuyện trong ngày. Anh muốn được hạnh phúc cùng em, chứ không chỉ đứng từ xa và nói rằng em phải tự chăm sóc bản thân.
 
@@ -1574,45 +1595,50 @@ Anh biết phía trước còn rất nhiều điều mà hai đứa chưa biết
 Anh thương em lắm. Và điều anh mong nhất trong mùa Trung Thu này không phải là một món quà gì cả, mà là hy vọng chúng ta vẫn sẽ còn ở bên nhau thật lâu. Để rồi một ngày nào đó, những điều anh đang viết hôm nay sẽ không còn chỉ là những lời ước, mà sẽ trở thành những điều anh và em thật sự đang sống cùng nhau.
 
 Chúc em một mùa Trung Thu thật ấm áp, thật ngọt ngào. Mong em luôn vui vẻ, bình an. Và hy vọng những ngày tháng phía trước, anh vẫn có thể là người được đồng hành cùng em, dù là từ xa hay một ngày nào đó, ngay bên cạnh em. 🌙❤️`;
-    
-    const envelope = document.getElementById('envelope');
-    const letterCard = document.getElementById('letterCard');
-    const letterTextEl = document.getElementById('letterText');
-    let opened = false;
 
-    function openLetter() {
-      if (opened) return;
-      opened = true;
-      envelope.classList.add('gone');
-      letterCard.classList.add('visible');
-      playChime();
+    function setupLetter(envelopeId, cardId, textId, message) {
+      const envelope = document.getElementById(envelopeId);
+      const letterCard = document.getElementById(cardId);
+      const letterTextEl = document.getElementById(textId);
+      let opened = false;
 
-      if (prefersReduced) {
-        letterTextEl.textContent = letterMessage;
-        letterTextEl.contentEditable = 'true';
-        return;
-      }
-      let i = 0;
-      const cursor = document.createElement('span');
-      cursor.className = 'cursor';
-      function step() {
-        if (i <= letterMessage.length) {
-          letterTextEl.textContent = letterMessage.slice(0, i);
-          letterTextEl.appendChild(cursor);
-          i++;
-          setTimeout(step, 16);
-        } else {
-          cursor.remove();
+      function openLetter() {
+        if (opened) return;
+        opened = true;
+        envelope.classList.add('gone');
+        letterCard.classList.add('visible');
+        playChime();
+
+        if (prefersReduced) {
+          letterTextEl.textContent = message;
           letterTextEl.contentEditable = 'true';
-          letterTextEl.spellcheck = false;
+          return;
         }
+        let i = 0;
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        function step() {
+          if (i <= message.length) {
+            letterTextEl.textContent = message.slice(0, i);
+            letterTextEl.appendChild(cursor);
+            i++;
+            setTimeout(step, 16);
+          } else {
+            cursor.remove();
+            letterTextEl.contentEditable = 'true';
+            letterTextEl.spellcheck = false;
+          }
+        }
+        step();
       }
-      step();
+      envelope.addEventListener('click', openLetter);
+      envelope.addEventListener('keydown', (e) => { if (e.key === 'Enter') openLetter(); });
+      envelope.setAttribute('tabindex', '0');
+      envelope.setAttribute('role', 'button');
     }
-    envelope.addEventListener('click', openLetter);
-    envelope.addEventListener('keydown', (e) => { if (e.key === 'Enter') openLetter(); });
-    envelope.setAttribute('tabindex', '0');
-    envelope.setAttribute('role', 'button');
+
+    setupLetter('envelope1', 'letterCard1', 'letterText1', letterMessage1);
+    setupLetter('envelope2', 'letterCard2', 'letterText2', letterMessage2);
 
     /* ============ MOONCAKES ============ */
     const cakeMessages = [
@@ -1698,39 +1724,6 @@ Chúc em một mùa Trung Thu thật ấm áp, thật ngọt ngào. Mong em luô
       }
     }
 
-    function pluck(freq, delay = 0, gainMult = 1) {
-      if (!audioCtx) return;
-      const t0 = audioCtx.currentTime + delay;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, t0);
-      gain.gain.linearRampToValueAtTime(0.22 * gainMult, t0 + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.2);
-      osc.connect(gain);
-      gain.connect(masterGain);
-      osc.start(t0);
-      osc.stop(t0 + 2.3);
-    }
-
-    function playChime() {
-      if (!soundOn || !audioCtx) return;
-      pluck(scale[Math.floor(Math.random() * scale.length)] * 2, 0, 1.3);
-    }
-
-    function playBigChime() {
-      if (!soundOn || !audioCtx) { return; }
-      const notes = [scale[1], scale[2], scale[4]];
-      notes.forEach((f, i) => pluck(f * 2, i * 0.18, 1.4));
-    }
-
-    function scheduleAmbient() {
-      if (!soundOn) return;
-      pluck(scale[Math.floor(Math.random() * scale.length)]);
-      noteTimer = setTimeout(scheduleAmbient, 1600 + Math.random() * 1800);
-    }
-
     const soundToggle = document.getElementById('soundToggle');
 
     soundToggle.addEventListener('click', () => {
@@ -1755,6 +1748,9 @@ Chúc em một mùa Trung Thu thật ấm áp, thật ngọt ngào. Mong em luô
         audio.pause();
       }
     });
+
+    function playChime() {}
+    function playBigChime() {}
   </script>
 
 </body>
